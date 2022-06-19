@@ -1,6 +1,6 @@
 import { Box, ChakraProvider } from '@chakra-ui/react';
-import { useCustomTheme } from './hooks';
-import { MultiVote } from './screens/MultiVote';
+import { PagesProvider, useCustomTheme } from './hooks';
+import { Pages } from './page-config';
 
 export function App() {
     const theme = useCustomTheme();
@@ -8,7 +8,7 @@ export function App() {
         <ChakraProvider {...{ theme }}>
             <Box h="100vh" w="100vw">
                 <Box h="100%" p="8">
-                    <MultiVote />
+                    <PagesProvider pages={Pages} />
                 </Box>
             </Box>
         </ChakraProvider>
