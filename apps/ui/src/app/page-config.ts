@@ -2,7 +2,7 @@ import { PageOptions } from './types/pages';
 
 export const Pages: PageOptions[] = [
     {
-        title: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        title: '',
         type: 'MultiVote',
         options: {
             options: [

@@ -1,15 +1,14 @@
-import { Button, Flex, Heading, VStack } from '@chakra-ui/react';
+import { Heading, VStack } from '@chakra-ui/react';
 import { ItemList } from '../components/ItemList';
-import { BsArrowRight } from 'react-icons/bs';
-import { useState } from 'react';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Vote } from './SimpleVote';
+import { CanGoNext } from '../types';
 
-interface MultiVoteProps {
+interface MultiVoteProps extends CanGoNext {
     options: Vote[];
 }
 
-export const MultiVote = ({ options }: MultiVoteProps) => {
+export const MultiVote = ({ options, onCanGoNext, form }: MultiVoteProps) => {
     const [edited, setEdited] = useState<boolean[]>(options.map(() => false));
 
     const onEdit = (idx: number) => () => {
@@ -18,7 +17,11 @@ export const MultiVote = ({ options }: MultiVoteProps) => {
         setEdited(newEdited);
     };
 
-    const canSubmit = useMemo(() => edited.every((v) => v === true), [edited]);
+    useEffect(() => {
+        if (edited.every((v) => v)) {
+            onCanGoNext();
+        }
+    }, [edited, onCanGoNext]);
 
     return (
         <VStack spacing={12} alignItems="flex-start">

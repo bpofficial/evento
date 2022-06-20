@@ -1,1 +1,1 @@
-export * from './extensible';
+export * from './pages';

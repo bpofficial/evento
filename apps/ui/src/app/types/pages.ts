@@ -1,13 +1,27 @@
+import { FormikContextType } from 'formik';
 import * as Screens from '../screens';
 
-type ScreenProp<T extends keyof typeof Screens> = React.ComponentProps<
-    typeof Screens[T]
->;
+export interface PageProps {
+    page: { currentIndex: number; currentName: string; formikKey: string };
+}
+
+export interface PageForm<T = any> {
+    form: {
+        formik: FormikContextType<T>;
+    };
+}
+
+export interface CanGoNext extends PageProps, PageForm {
+    onCanGoNext: () => void;
+}
 
 export interface PageOption<T extends keyof typeof Screens> {
     title: string;
     type: T;
-    options: ScreenProp<T>;
+    options: Omit<
+        React.ComponentProps<typeof Screens[T]>,
+        keyof (PageProps & PageForm & CanGoNext)
+    >;
 }
 
 export type PageOptions =
