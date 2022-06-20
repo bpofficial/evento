@@ -4,6 +4,7 @@ import { BsArrowLeft, BsArrowRight } from 'react-icons/bs';
 import { useFormik } from 'formik';
 import { PagesContext } from './pageContext';
 import { createPageProps, usePagesState } from './usePagesState';
+import { useEffect } from 'react';
 
 export interface PagesProviderProps {
     pages: PageOptions[];
@@ -14,6 +15,10 @@ export const PagesProvider = ({ pages }: PagesProviderProps) => {
     const form = useFormik({ initialValues: {}, onSubmit: console.log });
     const props = createPageProps({ state, screen, actions, form });
     const ctx = { pages, ...actions, currentPage: screen };
+
+    useEffect(() => {
+        console.log(form.values);
+    }, [form.values]);
 
     return (
         <PagesContext.Provider value={ctx}>
@@ -39,7 +44,7 @@ export const PagesProvider = ({ pages }: PagesProviderProps) => {
                     onClick={actions.nextPage}
                     disabled={!state.canGoNext}
                 >
-                    <HStack onClick={actions.previousPage}>
+                    <HStack>
                         <Box>{state.isLastPage ? 'Submit' : 'Next'}</Box>
                         <BsArrowRight />
                     </HStack>

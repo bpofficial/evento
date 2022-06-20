@@ -6,7 +6,7 @@ export function App() {
     const theme = useCustomTheme();
     return (
         <ChakraProvider {...{ theme }}>
-            <Box h="100vh" w="100vw">
+            <Box h="100%" w="100vw">
                 <Box h="100%" p="8">
                     <PagesProvider pages={Pages} />
                 </Box>

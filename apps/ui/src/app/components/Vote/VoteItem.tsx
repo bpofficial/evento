@@ -1,24 +1,18 @@
 import { Box, Checkbox, HStack } from '@chakra-ui/react';
+import { ClaimableVoteOption } from '../../types';
 
-interface ItemProps {
-    title: string;
-    completed?: {
-        completedBy: string;
-        completedAt: string;
-        anonymous: boolean;
-    } | null;
-    completionText?: string;
+interface VoteItemProps extends ClaimableVoteOption {
     onChange: (val: boolean) => void;
     isSelected?: boolean;
 }
 
-export const Item = ({
-    title,
+export const VoteItem = ({
+    name,
     completed = null,
     completionText = 'Completed',
     onChange,
     isSelected = false,
-}: ItemProps) => {
+}: VoteItemProps) => {
     return (
         <Box opacity={completed ? 0.7 : 1}>
             <HStack>
@@ -28,7 +22,7 @@ export const Item = ({
                     onChange={(e) => onChange(e.currentTarget.checked)}
                 />
                 <Box textDecoration={completed ? 'line-through' : undefined}>
-                    {title}
+                    {name}
                 </Box>
                 {completed ? (
                     <Box fontStyle="italic">

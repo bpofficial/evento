@@ -6,9 +6,7 @@ export interface PageProps {
 }
 
 export interface PageForm<T = any> {
-    form: {
-        formik: FormikContextType<T>;
-    };
+    form: FormikContextType<T>;
 }
 
 export interface CanGoNext extends PageProps, PageForm {
@@ -16,7 +14,7 @@ export interface CanGoNext extends PageProps, PageForm {
 }
 
 export interface PageOption<T extends keyof typeof Screens> {
-    title: string;
+    title?: string;
     type: T;
     options: Omit<
         React.ComponentProps<typeof Screens[T]>,
@@ -30,4 +28,5 @@ export type PageOptions =
     | PageOption<'MultiVote'>
     | PageOption<'QuickPoll'>
     | PageOption<'ScanQR'>
-    | PageOption<'SimpleVote'>;
+    | PageOption<'SimplePoll'>
+    | PageOption<'CustomContent'>;

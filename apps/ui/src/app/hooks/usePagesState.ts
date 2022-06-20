@@ -27,7 +27,7 @@ export const createPageProps = <T>({
     const props = screen.options as any;
     props.page = page;
     props.onCanGoNext = () => actions.setGoNext.on();
-    props.form = { form };
+    props.form = form;
 
     return props;
 };
@@ -51,7 +51,7 @@ export const usePagesState = (pages: PagesProviderProps['pages']) => {
     };
 
     const previousPage = () => {
-        setGoNext.off();
+        setGoNext.on();
         if (isFirstPage) return;
         setCurrentIndex((x) => x - 1);
     };
