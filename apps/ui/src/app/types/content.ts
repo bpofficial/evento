@@ -25,4 +25,5 @@ export type Content =
     | ContentItem<'ContentSpacing'>
     | ContentItem<'ContentLink'>
     | ContentItem<'ContentCheckboxGroup'>
-    | ContentItem<'ContentPollGroup'>;
+    | ContentItem<'ContentPollGroup'>
+    | ContentItem<'ContentPayment'>;

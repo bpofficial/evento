@@ -61,7 +61,7 @@ export const ContentCheckboxGroup = ({
             {items.map((props, key) => (
                 <ContentCheckbox
                     {...{ key, ...props, page, form, fieldKey }}
-                    value={getIsSelected(props)}
+                    isSelected={getIsSelected(props)}
                     onChange={onChange(props)}
                 />
             ))}

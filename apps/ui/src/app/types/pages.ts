@@ -15,6 +15,7 @@ export interface CanGoNext extends PageProps, PageForm {
 
 export interface PageOption<T extends keyof typeof Screens> {
     title?: string;
+    buttonText?: string;
     type: T;
     options: Omit<
         React.ComponentProps<typeof Screens[T]>,

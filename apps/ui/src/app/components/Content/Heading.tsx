@@ -1,15 +1,24 @@
-import { Heading } from '@chakra-ui/react';
+import { Heading, ThemingProps, TypographyProps } from '@chakra-ui/react';
+import { useReplaceInputValue } from '../../hooks/useReplaceInputValue';
+import { PageForm } from '../../types';
 
-interface ContentHeadingProps {
+interface ContentHeadingProps extends PageForm {
     value: string;
     options?: {
-        align?: 'left' | 'center' | 'right';
+        size?: ThemingProps<'Heading'>['size'];
+        textAlign?: TypographyProps['textAlign'];
     };
 }
 
-export const ContentHeading = ({ value, options }: ContentHeadingProps) => {
+export const ContentHeading = ({
+    value,
+    options,
+    form,
+}: ContentHeadingProps) => {
+    value = useReplaceInputValue(value, form);
+
     return (
-        <Heading size="lg" w="100%" textAlign={options?.align}>
+        <Heading w="100%" {...options}>
             {value}
         </Heading>
     );

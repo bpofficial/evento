@@ -1,5 +1,10 @@
 import { FormikContextType } from 'formik';
-import { PageOption, PageOptions } from '../types';
+import {
+    ContentFieldProps,
+    ContentItem,
+    PageOption,
+    PageOptions,
+} from '../types';
 
 export function getFormValue(
     formikKey: string,
@@ -26,14 +31,32 @@ export function registerInputs(pages: PageOptions[]) {
         if (page.type === 'CustomContent') {
             for (let j = 0; j < page.options.content.length; j++) {
                 const content = page.options.content[j];
-                if (content.type === 'ContentInput') {
-                    const key = content.options.fieldKey;
+                if (
+                    [
+                        'ContentInput',
+                        'ContentCheckboxGroup',
+                        'ContentPollGroup',
+                    ].includes(content.type)
+                ) {
+                    const key = (content.options as any).fieldKey;
                     inputs.set(key, getInputFormikKey(key, i));
                 }
             }
         }
     }
     return inputs;
+}
+
+export function replaceTextWithInputValue(
+    str: string,
+    inputs: Map<string, string>,
+    form: FormikContextType<any>
+) {
+    for (const [key, field] of inputs) {
+        const value = getFieldValue(field, form);
+        str = str.replaceAll(`{{${key}}}`, value);
+    }
+    return str;
 }
 
 export function validateField(

@@ -5,6 +5,7 @@ import { ContentSpacing } from './Spacing';
 import { ContentText } from './Text';
 import { ContentPollGroup } from './PollGroup';
 import { ContentCheckboxGroup } from './CheckboxGroup';
+import { ContentPayment } from './Payment';
 
 export * from './Heading';
 export * from './Text';
@@ -13,6 +14,7 @@ export * from './Spacing';
 export * from './Link';
 export * from './PollGroup';
 export * from './CheckboxGroup';
+export * from './Payment';
 
 export const ContentComponents = {
     ContentHeading,
@@ -22,4 +24,5 @@ export const ContentComponents = {
     ContentText,
     ContentPollGroup,
     ContentCheckboxGroup,
+    ContentPayment,
 };

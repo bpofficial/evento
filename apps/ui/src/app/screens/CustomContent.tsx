@@ -5,6 +5,7 @@ import {
     ContentHeading,
     ContentInput,
     ContentLink,
+    ContentPayment,
     ContentPollGroup,
     ContentSpacing,
     ContentText,
@@ -51,7 +52,7 @@ export const CustomContent = ({
     ]);
 
     return (
-        <VStack w="100%" alignItems="flex-start">
+        <VStack w="100%" h="100%" alignItems="flex-start">
             {content.map(({ type, options }, key) => {
                 switch (type) {
                     case 'ContentHeading':
@@ -95,6 +96,12 @@ export const CustomContent = ({
                     case 'ContentPollGroup':
                         return (
                             <ContentPollGroup
+                                {...{ key, ...options, form, page }}
+                            />
+                        );
+                    case 'ContentPayment':
+                        return (
+                            <ContentPayment
                                 {...{ key, ...options, form, page }}
                             />
                         );

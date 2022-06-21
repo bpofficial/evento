@@ -4,17 +4,18 @@ import { BsArrowLeft, BsArrowRight } from 'react-icons/bs';
 import { useFormik } from 'formik';
 import { PagesContext } from './pageContext';
 import { createPageProps, usePagesState } from './usePagesState';
-import { useEffect } from 'react';
+import { registerInputs } from '../utils';
 
 export interface PagesProviderProps {
     pages: PageOptions[];
 }
 
 export const PagesProvider = ({ pages }: PagesProviderProps) => {
+    const inputs = registerInputs(pages);
     const { CurrentPage, screen, actions, state } = usePagesState(pages);
     const form = useFormik({ initialValues: {}, onSubmit: console.log });
     const props = createPageProps({ state, screen, actions, form });
-    const ctx = { pages, ...actions, currentPage: screen };
+    const ctx = { pages, ...actions, currentPage: screen, inputs };
 
     return (
         <PagesContext.Provider value={ctx}>
@@ -23,7 +24,7 @@ export const PagesProvider = ({ pages }: PagesProviderProps) => {
                 justifyContent={'space-between'}
                 flexDirection="column"
             >
-                <VStack alignItems="flex-start">
+                <VStack alignItems="flex-start" h="100%">
                     {!state.isFirstPage && (
                         <HStack mb="2" onClick={actions.previousPage}>
                             <BsArrowLeft />
@@ -41,7 +42,10 @@ export const PagesProvider = ({ pages }: PagesProviderProps) => {
                     disabled={!state.canGoNext}
                 >
                     <HStack>
-                        <Box>{state.isLastPage ? 'Submit' : 'Next'}</Box>
+                        <Box>
+                            {screen.buttonText ||
+                                (state.isLastPage ? 'Submit' : 'Next')}
+                        </Box>
                         <BsArrowRight />
                     </HStack>
                 </Button>

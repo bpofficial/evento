@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/react';
+import { Text, TextProps, TypographyProps } from '@chakra-ui/react';
 import { getLinksFromText } from '@evento/utils';
 import { ContentItem } from '../../types';
 import { ContentLink } from './Link';
@@ -6,8 +6,8 @@ import { ContentLink } from './Link';
 interface ContentTextProps {
     value: string;
     options?: {
-        align?: 'left' | 'center' | 'right';
-    };
+        textAlign?: TypographyProps['textAlign'];
+    } & Partial<TextProps>;
 }
 
 function splitTextAtLinks(str: string, links: Map<string, RegExpMatchArray>) {
@@ -35,7 +35,7 @@ export const ContentText = ({ value, options }: ContentTextProps) => {
     const contentArr = splitTextAtLinks(str, links);
 
     return (
-        <Text w="100%" textAlign={options?.align}>
+        <Text w="100%" {...options}>
             {contentArr.map((c, key) => {
                 switch (typeof c) {
                     case 'string':

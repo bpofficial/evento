@@ -1,6 +1,6 @@
 import { PageOptions } from './types/pages';
 
-export const Pages: PageOptions[] = [
+const GenericPages: PageOptions[] = [
     {
         type: 'CustomContent',
         options: {
@@ -10,7 +10,7 @@ export const Pages: PageOptions[] = [
                     options: {
                         value: 'Welcome!',
                         options: {
-                            align: 'center',
+                            textAlign: 'center',
                         },
                     },
                 },
@@ -19,7 +19,7 @@ export const Pages: PageOptions[] = [
                     options: {
                         value: 'Join us for a little board game night',
                         options: {
-                            align: 'center',
+                            textAlign: 'center',
                         },
                     },
                 },
@@ -62,6 +62,25 @@ export const Pages: PageOptions[] = [
                         },
                     },
                 },
+                // {
+                //     type: 'ContentSpacing',
+                //     options: {
+                //         height: '10px',
+                //     },
+                // },
+                // {
+                //     type: 'ContentInput',
+                //     options: {
+                //         label: 'Email Address',
+                //         fieldKey: 'email',
+                //         options: {
+                //             autoComplete: 'email',
+                //             isRequired: true,
+                //             helperText:
+                //                 'Enter your email to help us contact you',
+                //         },
+                //     },
+                // },
             ],
         },
     },
@@ -73,12 +92,9 @@ export const Pages: PageOptions[] = [
                     type: 'ContentHeading',
                     options: {
                         value: 'Choose a single option',
-                    },
-                },
-                {
-                    type: 'ContentSpacing',
-                    options: {
-                        height: '4px',
+                        options: {
+                            size: 'md',
+                        },
                     },
                 },
                 {
@@ -89,9 +105,9 @@ export const Pages: PageOptions[] = [
                             isRequired: true,
                         },
                         items: [
-                            { id: '1', label: 'Pizza' },
-                            { id: '2', label: 'Drinks' },
-                            { id: '3', label: 'Snacks' },
+                            { id: '1', label: 'Pizza', value: 'pizza' },
+                            { id: '2', label: 'Drinks', value: 'drinks' },
+                            { id: '3', label: 'Snacks', value: 'snacks' },
                         ],
                     },
                 },
@@ -105,12 +121,9 @@ export const Pages: PageOptions[] = [
                     type: 'ContentHeading',
                     options: {
                         value: 'When do you expect to arrive?',
-                    },
-                },
-                {
-                    type: 'ContentSpacing',
-                    options: {
-                        height: '4px',
+                        options: {
+                            size: 'md',
+                        },
                     },
                 },
                 {
@@ -148,4 +161,190 @@ export const Pages: PageOptions[] = [
             ],
         },
     },
+    {
+        type: 'CustomContent',
+        buttonText: 'Pay Now',
+        options: {
+            content: [
+                {
+                    type: 'ContentHeading',
+                    options: {
+                        value: 'Place a tip',
+                        options: {
+                            size: 'md',
+                        },
+                    },
+                },
+                {
+                    type: 'ContentSpacing',
+                    options: {
+                        height: '10px',
+                    },
+                },
+                {
+                    type: 'ContentPayment',
+                    options: {
+                        label: 'Donation',
+                        amount: 500,
+                    },
+                },
+            ],
+        },
+    },
 ];
+
+const PokerPages: PageOptions[] = [
+    {
+        type: 'CustomContent',
+        options: {
+            content: [
+                {
+                    type: 'ContentHeading',
+                    options: {
+                        value: 'Poker Night',
+                        options: {
+                            textAlign: 'center',
+                        },
+                    },
+                },
+                {
+                    type: 'ContentText',
+                    options: {
+                        value: 'Join us for some amateur poker',
+                        options: {
+                            textAlign: 'center',
+                        },
+                    },
+                },
+                {
+                    type: 'ContentSpacing',
+                    options: {
+                        height: '20px',
+                    },
+                },
+                {
+                    type: 'ContentInput',
+                    options: {
+                        label: 'Your Name',
+                        fieldKey: 'name',
+                        options: {
+                            autoComplete: 'given-name',
+                            autoFocus: true,
+                            isRequired: true,
+                            helperText:
+                                'Enter your first name to help us identify you',
+                        },
+                    },
+                },
+                // {
+                //     type: 'ContentSpacing',
+                //     options: {
+                //         height: '10px',
+                //     },
+                // },
+                // {
+                //     type: 'ContentInput',
+                //     options: {
+                //         label: 'Phone Number',
+                //         fieldKey: 'mobile',
+                //         options: {
+                //             autoComplete: 'tel',
+                //             isRequired: true,
+                //             helperText:
+                //                 'Enter your phone in case we need to contact you',
+                //         },
+                //     },
+                // },
+                // {
+                //     type: 'ContentSpacing',
+                //     options: {
+                //         height: '10px',
+                //     },
+                // },
+                // {
+                //     type: 'ContentInput',
+                //     options: {
+                //         label: 'Email Address',
+                //         fieldKey: 'email',
+                //         options: {
+                //             autoComplete: 'email',
+                //             isRequired: true,
+                //             helperText:
+                //                 'Enter your email to help us contact you',
+                //         },
+                //     },
+                // },
+            ],
+        },
+    },
+    {
+        type: 'CustomContent',
+        options: {
+            content: [
+                {
+                    type: 'ContentHeading',
+                    options: {
+                        value: 'Are you having pizza?',
+                        options: { size: 'md' },
+                    },
+                },
+                {
+                    type: 'ContentSpacing',
+                    options: {
+                        height: '10px',
+                    },
+                },
+                {
+                    type: 'ContentCheckboxGroup',
+                    options: {
+                        fieldKey: 'gettingPizza',
+                        items: [
+                            {
+                                id: '1',
+                                label: 'Yes',
+                                value: true,
+                            },
+                            {
+                                id: '2',
+                                label: 'No',
+                                value: false,
+                            },
+                        ],
+                    },
+                },
+            ],
+        },
+    },
+    {
+        type: 'CustomContent',
+        buttonText: 'Pay Now',
+        options: {
+            content: [
+                {
+                    type: 'ContentHeading',
+                    options: {
+                        value: 'Thanks, {{name}}',
+                        options: {
+                            size: 'md',
+                        },
+                    },
+                },
+                {
+                    type: 'ContentSpacing',
+                    options: {
+                        height: '10px',
+                    },
+                },
+                {
+                    type: 'ContentPayment',
+                    options: {
+                        label: 'buy-in',
+                        amount: 2500,
+                    },
+                },
+            ],
+        },
+    },
+];
+
+export const Pages = PokerPages;

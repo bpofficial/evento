@@ -6,6 +6,7 @@ interface IPageContext extends PagesProviderProps {
     nextPage: () => void;
     previousPage: () => void;
     currentPage: PageOptions | null;
+    inputs: Map<string, string>;
 }
 
 export const PagesContext = createContext<IPageContext>({
@@ -17,6 +18,7 @@ export const PagesContext = createContext<IPageContext>({
     previousPage() {
         //
     },
+    inputs: new Map(),
 });
 
 export const usePages = () => {

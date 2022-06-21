@@ -5,7 +5,8 @@ import { getFieldValue } from '../../utils';
 export interface ContentCheckboxProps
     extends ContentFieldProps,
         CheckboxOption {
-    value?: boolean;
+    value: string | number | boolean;
+    isSelected?: boolean;
     options?: {
         isRequired?: boolean;
         text?: {
@@ -26,7 +27,7 @@ export const ContentCheckbox = ({
     id,
     fieldKey,
     label,
-    value,
+    isSelected,
     postRenderItem,
     options,
     page,
@@ -43,7 +44,7 @@ export const ContentCheckbox = ({
     };
 
     const getIsSelected = () => {
-        if (typeof value === 'boolean') return value;
+        if (typeof isSelected === 'boolean') return isSelected;
         const field = getFieldValue(key, form);
         return !!field;
     };
