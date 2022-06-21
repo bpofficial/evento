@@ -1,7 +1,7 @@
-import { Vote, VoteOption } from './vote';
+import { Checkbox, CheckboxOption } from './checkbox';
 
-export interface PollOption extends VoteOption {
+export interface PollOption extends CheckboxOption {
     count: number;
 }
 
-export type Poll = Vote<PollOption>;
+export type Poll = Checkbox<PollOption>;

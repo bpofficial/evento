@@ -1,11 +1,11 @@
-export type VoteOption = { id: string; name: string };
+export type CheckboxOption = { id: string; label: string };
 
-export interface Vote<T extends VoteOption = VoteOption> {
+export interface Checkbox<T extends CheckboxOption = CheckboxOption> {
     title: string;
     options: T[];
 }
 
-export interface ClaimableVoteOption extends VoteOption {
+export interface ClaimableVoteOption extends CheckboxOption {
     completed?: {
         completedBy: string;
         completedAt: string;

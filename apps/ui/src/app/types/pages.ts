@@ -10,7 +10,7 @@ export interface PageForm<T = any> {
 }
 
 export interface CanGoNext extends PageProps, PageForm {
-    onCanGoNext: () => void;
+    onCanGoNext: (can?: boolean) => void;
 }
 
 export interface PageOption<T extends keyof typeof Screens> {
@@ -25,8 +25,5 @@ export interface PageOption<T extends keyof typeof Screens> {
 export type PageOptions =
     | PageOption<'AllEvents'>
     | PageOption<'EasyPayment'>
-    | PageOption<'MultiVote'>
-    | PageOption<'QuickPoll'>
     | PageOption<'ScanQR'>
-    | PageOption<'SimplePoll'>
     | PageOption<'CustomContent'>;

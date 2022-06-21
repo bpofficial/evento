@@ -16,10 +16,6 @@ export const PagesProvider = ({ pages }: PagesProviderProps) => {
     const props = createPageProps({ state, screen, actions, form });
     const ctx = { pages, ...actions, currentPage: screen };
 
-    useEffect(() => {
-        console.log(form.values);
-    }, [form.values]);
-
     return (
         <PagesContext.Provider value={ctx}>
             <Flex

@@ -1,21 +1,21 @@
 import { Box, Checkbox, Flex, HStack, Progress } from '@chakra-ui/react';
 import { divide } from '@evento/utils';
-import { PollOption } from '../../types';
+import { PollOption } from '../../../types';
 
 interface PollItemProps extends PollOption {
     onChange: (val: boolean) => void;
     isSelected?: boolean;
-    total: number;
+    totalPolls: number;
 }
 
 export const PollItem = ({
-    name,
+    label,
     count,
-    total,
+    totalPolls,
     onChange,
     isSelected = false,
 }: PollItemProps) => {
-    const progress = divide(count + (isSelected ? 1 : 0), total) ?? 0;
+    const progress = divide(count + (isSelected ? 1 : 0), totalPolls) ?? 0;
 
     return (
         <Flex w="100%" mt="2" position="relative">
@@ -26,7 +26,7 @@ export const PollItem = ({
                     zIndex={9999}
                     borderColor="purple.300"
                 />
-                <Box>{name}</Box>
+                <Box>{label}</Box>
             </HStack>
             <Progress
                 borderRadius="sm"

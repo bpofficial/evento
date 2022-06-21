@@ -1,11 +1,16 @@
 import { CanGoNext, PageForm, PageProps } from '.';
-import * as ContentComponents from '../components/Content';
+import { ContentComponents } from '../components/Content';
 
-export interface ContentProps extends PageProps, PageForm, CanGoNext {
+export interface ContentFieldProps extends PageProps, PageForm {
     fieldKey: string;
+    options?: {
+        isRequired?: boolean;
+    };
 }
 
-export interface ContentItem<T extends keyof typeof ContentComponents> {
+export type ContentType = keyof typeof ContentComponents;
+
+export interface ContentItem<T extends ContentType> {
     type: T;
     options: Omit<
         React.ComponentProps<typeof ContentComponents[T]>,
@@ -17,4 +22,7 @@ export type Content =
     | ContentItem<'ContentHeading'>
     | ContentItem<'ContentText'>
     | ContentItem<'ContentInput'>
-    | ContentItem<'ContentSpacing'>;
+    | ContentItem<'ContentSpacing'>
+    | ContentItem<'ContentLink'>
+    | ContentItem<'ContentCheckboxGroup'>
+    | ContentItem<'ContentPollGroup'>;

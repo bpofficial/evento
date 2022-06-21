@@ -1,4 +1,4 @@
 export * from './pages';
-export * from './vote';
+export * from './checkbox';
 export * from './poll';
 export * from './content';

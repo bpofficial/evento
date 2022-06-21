@@ -26,7 +26,9 @@ export const createPageProps = <T>({
 
     const props = screen.options as any;
     props.page = page;
-    props.onCanGoNext = () => actions.setGoNext.on();
+    props.onCanGoNext = (val = true) => {
+        val ? actions.setGoNext.on() : actions.setGoNext.off();
+    };
     props.form = form;
 
     return props;

@@ -1,14 +1,21 @@
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { getInputValue } from '../../page-config';
-import { ContentProps } from '../../types';
+import {
+    FormControl,
+    FormHelperText,
+    FormLabel,
+    Input,
+} from '@chakra-ui/react';
+import { getFormValue } from '../../utils';
+import { ContentFieldProps } from '../../types';
 
-interface ContentInputProps extends ContentProps {
+interface ContentInputProps extends ContentFieldProps {
     label: string;
     options?: {
         placeholder?: string;
         isRequired?: boolean;
         type?: React.HTMLInputTypeAttribute;
         autoFocus?: boolean;
+        autoComplete?: string;
+        helperText?: string;
     };
 }
 
@@ -18,16 +25,14 @@ export const ContentInput = ({
     page,
     form,
     fieldKey,
-    onCanGoNext,
 }: ContentInputProps) => {
     const key = `${page.formikKey}.${fieldKey}`;
 
     const onChange = (value: string) => {
         form.setFieldValue(key, value);
-        onCanGoNext();
     };
 
-    const value = getInputValue(key, form);
+    const value = getFormValue(key, form);
 
     return (
         <FormControl isRequired={!!options?.isRequired}>
@@ -39,6 +44,7 @@ export const ContentInput = ({
                 value={value}
                 onChange={(evt) => onChange(evt.target.value)}
             />
+            <FormHelperText>{options?.helperText}</FormHelperText>
         </FormControl>
     );
 };
