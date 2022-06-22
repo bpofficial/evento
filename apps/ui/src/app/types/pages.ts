@@ -2,7 +2,12 @@ import { FormikContextType } from 'formik';
 import * as Screens from '../screens';
 
 export interface PageProps {
-    page: { currentIndex: number; currentName: string; formikKey: string };
+    page: {
+        currentIndex: number;
+        previousIndex: number;
+        currentName: string;
+        formikKey: string;
+    };
 }
 
 export interface PageForm<T = any> {
@@ -17,6 +22,7 @@ export interface PageOption<T extends keyof typeof Screens> {
     title?: string;
     buttonText?: string;
     type: T;
+    skipPageCondition?: any;
     options: Omit<
         React.ComponentProps<typeof Screens[T]>,
         keyof (PageProps & PageForm & CanGoNext)

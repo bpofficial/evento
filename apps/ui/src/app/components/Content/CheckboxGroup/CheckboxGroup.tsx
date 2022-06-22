@@ -23,9 +23,13 @@ export const ContentCheckboxGroup = ({
 
     const onChange = (item: CheckboxOption) => (val: boolean) => {
         if (options?.multiSelect) {
-            const currentValue: CheckboxOption[] =
-                getFieldValue(key, form) ?? [];
-            const idx = currentValue.findIndex((v) => v.id === item.id);
+            let currentValue = getFieldValue(key, form) ?? [];
+            if (!(currentValue instanceof Array)) {
+                currentValue = [currentValue];
+            }
+            const idx = currentValue.findIndex(
+                (v: CheckboxOption) => v.id === item.id
+            );
             if (idx !== -1) {
                 if (val) return;
                 currentValue.splice(idx, 1);
@@ -50,7 +54,10 @@ export const ContentCheckboxGroup = ({
                 );
                 return exists !== -1;
             } else {
-                return !!(currentValue && currentValue.id === item.id);
+                if (!(currentValue instanceof Array)) {
+                    return !!(currentValue && currentValue['id'] === item.id);
+                }
+                return !!(currentValue[0] && currentValue[0]['id'] === item.id);
             }
         },
         [form, key, options?.multiSelect]

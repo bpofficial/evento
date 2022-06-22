@@ -1,7 +1,7 @@
 import { ContentFieldProps, PollOption } from '../../../types';
 import { VStack } from '@chakra-ui/react';
 import { PollItem } from './PollItem';
-import { getFieldValue } from '../../../utils';
+import { getSingleFormValue } from '../../../utils';
 
 interface PollGroupProps extends ContentFieldProps {
     fieldKey: string;
@@ -27,7 +27,7 @@ export const ContentPollGroup = ({
     };
 
     const getIsSelected = (item: PollOption) => {
-        const field = getFieldValue(key, form);
+        const field = getSingleFormValue(key, form)?.value;
         return !!(field && field.id === item.id);
     };
 

@@ -7,13 +7,13 @@ export function useReplaceInputValue(
     str: string,
     form: FormikContextType<any>
 ) {
-    const { inputs } = usePages();
+    const { inputs, calculations } = usePages();
     const [value, setValue] = useState(str);
 
     useEffect(() => {
-        const res = replaceTextWithInputValue(str, inputs, form);
+        const res = replaceTextWithInputValue(str, inputs, calculations, form);
         setValue(res);
-    }, [str, inputs, form]);
+    }, [str, inputs, form, calculations]);
 
     return value;
 }

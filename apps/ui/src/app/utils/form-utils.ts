@@ -1,15 +1,24 @@
 import { FormikContextType } from 'formik';
-import {
-    ContentFieldProps,
-    ContentItem,
-    PageOption,
-    PageOptions,
-} from '../types';
+import { PageOption, PageOptions } from '../types';
+import { calculateField } from './calculate-field';
+
+type FieldValue = { value?: any } & Record<string, any>;
+
+export function getSingleFormValue(
+    formikKey: string,
+    formik: FormikContextType<any>
+): FieldValue {
+    let value = getFormValue(formikKey, formik);
+    if (value instanceof Array) {
+        value = value[0];
+    }
+    return value;
+}
 
 export function getFormValue(
     formikKey: string,
     formik: FormikContextType<any>
-) {
+): FieldValue | FieldValue[] {
     const parts = formikKey.split('.');
     let value = formik.values;
     for (const part of parts) {
@@ -24,7 +33,10 @@ export function getInputFormikKey(key: string, sourcePage: number) {
     return `${sourcePage}_CustomContent.${key}`;
 }
 
-export function registerInputs(pages: PageOptions[]) {
+export function registerInputs(
+    pages: PageOptions[],
+    calculations: Record<string, any>
+) {
     const inputs = new Map<string, string>();
     for (let i = 0; i < pages.length; i++) {
         const page = pages[i];
@@ -44,16 +56,36 @@ export function registerInputs(pages: PageOptions[]) {
             }
         }
     }
+    for (const key in calculations) {
+        if (inputs.has(key)) {
+            console.error(
+                `Registered inputs already contain '${key}' from calculations.`
+            );
+            continue;
+        }
+        inputs.set(key, '$calculation');
+    }
     return inputs;
 }
 
 export function replaceTextWithInputValue(
     str: string,
     inputs: Map<string, string>,
+    calculations: Record<string, any>,
     form: FormikContextType<any>
 ) {
     for (const [key, field] of inputs) {
-        const value = getFieldValue(field, form);
+        let value;
+        if (calculations[key]) {
+            value = calculateField(
+                calculations[key],
+                inputs,
+                calculations,
+                form
+            );
+        } else {
+            value = getSingleFormValue(field, form)?.value;
+        }
         str = str.replaceAll(`{{${key}}}`, value);
     }
     return str;
@@ -66,7 +98,9 @@ export function validateField(
     isRequired = false
 ) {
     if (!isRequired) return true;
-    const value = getFieldValue(fieldKey, form);
+
+    // Each field will be an object and the value will be represented by the value property on that object.
+    const value = getSingleFormValue(fieldKey, form)?.value;
 
     let isValid;
     switch (type) {

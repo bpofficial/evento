@@ -1,24 +1,19 @@
 import { createContext, useContext } from 'react';
+import { PagesProviderProps } from '../components/Pages';
 import { PageOptions } from '../types';
-import { PagesProviderProps } from './usePages';
+import { PagesState } from './usePagesState';
 
 interface IPageContext extends PagesProviderProps {
-    nextPage: () => void;
-    previousPage: () => void;
-    currentPage: PageOptions | null;
+    pages: PageOptions[];
     inputs: Map<string, string>;
+    pageState: PagesState;
 }
 
 export const PagesContext = createContext<IPageContext>({
     pages: [],
-    currentPage: null,
-    nextPage() {
-        //
-    },
-    previousPage() {
-        //
-    },
     inputs: new Map(),
+    calculations: {},
+    pageState: {} as any,
 });
 
 export const usePages = () => {

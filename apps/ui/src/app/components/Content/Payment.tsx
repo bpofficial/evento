@@ -12,15 +12,9 @@ import {
 import { PageForm, PageProps } from '../../types';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import {
-    Alert,
-    AlertIcon,
-    Box,
-    Button,
-    HStack,
-    VStack,
-} from '@chakra-ui/react';
-import { ContentText } from './Text';
+import { Box, HStack } from '@chakra-ui/react';
+import { replaceTextWithInputValue } from '../../utils';
+import { usePages } from '../../hooks/pageContext';
 
 const stripePromise = loadStripe(
     'pk_test_51H5lSlIHLTnuvRM7Ah4nUAVj66F8BxJRnhhRYcQcyMMUv6AjkaZSQJp0H9EvuAgqjnoS7gHHWFJxU9G3oBbc8RQm00yjqLBvfK'
@@ -33,7 +27,7 @@ const options: StripeElementsOptions = {
 };
 
 interface PaymentProps extends PageProps, PageForm {
-    amount: number;
+    amount: number | string;
     label: string;
 }
 
@@ -43,10 +37,32 @@ export const ContentPaymentComponent = ({
     page,
     form,
 }: PaymentProps) => {
+    const { inputs, calculations } = usePages();
     const stripe = useStripe();
+
+    const [value, setValue] = useState<number>(0);
     const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(
         null
     );
+
+    useEffect(() => {
+        let amt: number;
+        if (typeof amount === 'string') {
+            amt = Number(
+                replaceTextWithInputValue(amount, inputs, calculations, form)
+            );
+            if (Number.isNaN(amt)) {
+                console.error(
+                    "Couldn't calculate the value of `amount` provided to `ContentPayment`.",
+                    { provided: amount, calculated: amt }
+                );
+                return;
+            }
+        } else {
+            amt = amount;
+        }
+        setValue(amt);
+    }, [amount, calculations, form, inputs]);
 
     useEffect(() => {
         if (stripe) {
@@ -55,7 +71,7 @@ export const ContentPaymentComponent = ({
                 currency: 'aud',
                 total: {
                     label,
-                    amount,
+                    amount: value,
                 },
             });
 
@@ -64,13 +80,13 @@ export const ContentPaymentComponent = ({
                 .then((result) => result && setPaymentRequest(pr))
                 .catch(console.warn);
         }
-    }, [amount, label, stripe]);
+    }, [amount, label, stripe, value]);
 
     return (
         <>
             <HStack spacing={1} mb="8">
                 <Box>You're paying</Box>
-                <Box fontWeight={'800'}>${(amount / 100).toFixed(2)} AUD</Box>
+                <Box fontWeight={'800'}>${(value / 100).toFixed(2)} AUD</Box>
                 {/* <Button variant="link">change</Button> */}
             </HStack>
 

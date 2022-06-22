@@ -1,30 +1,25 @@
-import { useBoolean } from '@chakra-ui/react';
+import { useBoolean, usePrevious } from '@chakra-ui/react';
 import { FormikContextType } from 'formik';
 import { useState } from 'react';
+import { PagesProviderProps } from '../components/Pages';
 import * as Screens from '../screens';
-import { PageOptions, PageProps } from '../types';
-import { PagesProviderProps } from './usePages';
+import { PageProps } from '../types';
 
 interface CreatePageProps<T> {
-    state: PagesState['state'];
-    screen: PageOptions;
-    actions: PagesState['actions'];
+    pageState: PagesState;
     form: FormikContextType<T>;
 }
 
-export const createPageProps = <T>({
-    state,
-    screen,
-    actions,
-    form,
-}: CreatePageProps<T>) => {
+export const createPageProps = <T>({ pageState, form }: CreatePageProps<T>) => {
+    const { state, actions, currentPage } = pageState;
     const page: PageProps['page'] = {
         currentIndex: state.currentIndex,
-        currentName: screen.type,
-        formikKey: `${state.currentIndex}_${screen.type}`,
+        previousIndex: state.previousIndex,
+        currentName: currentPage.type,
+        formikKey: `${state.currentIndex}_${currentPage.type}`,
     };
 
-    const props = screen.options as any;
+    const props = currentPage.options as any;
     props.page = page;
     props.onCanGoNext = (val = true) => {
         val ? actions.setGoNext.on() : actions.setGoNext.off();
@@ -34,14 +29,15 @@ export const createPageProps = <T>({
     return props;
 };
 
-type PagesState = ReturnType<typeof usePagesState>;
+export type PagesState = ReturnType<typeof usePagesState>;
 
 export const usePagesState = (pages: PagesProviderProps['pages']) => {
     const [canGoNext, setGoNext] = useBoolean();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const previousIndex = usePrevious(currentIndex);
 
-    const screen = pages[currentIndex];
-    const CurrentPage = Screens[screen.type];
+    const currentPage = pages[currentIndex];
+    const Component = Screens[currentPage.type];
 
     const isLastPage = currentIndex === pages.length - 1;
     const isFirstPage = currentIndex === 0;
@@ -59,8 +55,8 @@ export const usePagesState = (pages: PagesProviderProps['pages']) => {
     };
 
     return {
-        CurrentPage,
-        screen,
+        Component,
+        currentPage,
         actions: {
             nextPage,
             previousPage,
@@ -69,6 +65,7 @@ export const usePagesState = (pages: PagesProviderProps['pages']) => {
         state: {
             canGoNext,
             currentIndex,
+            previousIndex,
             isLastPage,
             isFirstPage,
         },

@@ -1,9 +1,10 @@
 import { Text, TextProps, TypographyProps } from '@chakra-ui/react';
 import { getLinksFromText } from '@evento/utils';
-import { ContentItem } from '../../types';
+import { useReplaceInputValue } from '../../hooks/useReplaceInputValue';
+import { ContentItem, PageForm } from '../../types';
 import { ContentLink } from './Link';
 
-interface ContentTextProps {
+interface ContentTextProps extends PageForm {
     value: string;
     options?: {
         textAlign?: TypographyProps['textAlign'];
@@ -30,8 +31,9 @@ function splitTextAtLinks(str: string, links: Map<string, RegExpMatchArray>) {
     return result;
 }
 
-export const ContentText = ({ value, options }: ContentTextProps) => {
-    const [str, links] = getLinksFromText(value);
+export const ContentText = ({ value, options, form }: ContentTextProps) => {
+    const replaced = useReplaceInputValue(value, form);
+    const [str, links] = getLinksFromText(replaced);
     const contentArr = splitTextAtLinks(str, links);
 
     return (

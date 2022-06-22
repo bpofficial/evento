@@ -1,5 +1,4 @@
 import { VStack } from '@chakra-ui/react';
-import { useEffect, useMemo } from 'react';
 import {
     ContentCheckboxGroup,
     ContentHeading,
@@ -10,9 +9,8 @@ import {
     ContentSpacing,
     ContentText,
 } from '../components';
-import { usePages } from '../hooks/pageContext';
+import { useCustomContent } from '../hooks/useCustomContent';
 import { CanGoNext, Content } from '../types';
-import { validatePageRequirements } from '../utils';
 
 interface CustomContentProps extends CanGoNext {
     content: Content[];
@@ -24,32 +22,9 @@ export const CustomContent = ({
     form,
     page,
 }: CustomContentProps) => {
-    const { pages } = usePages();
+    const isLoading = useCustomContent(onCanGoNext, form);
 
-    const inputsAreValid = useMemo(() => {
-        const currentPage = pages[page.currentIndex];
-        if (currentPage.type === 'CustomContent') {
-            return (
-                validatePageRequirements(
-                    currentPage,
-                    page.currentIndex,
-                    form
-                ) === true
-            );
-        }
-        return true;
-    }, [pages, page.currentIndex, form]);
-
-    useEffect(() => {
-        onCanGoNext(inputsAreValid);
-    }, [
-        inputsAreValid,
-        form,
-        form.values,
-        onCanGoNext,
-        page.currentIndex,
-        pages,
-    ]);
+    if (isLoading) return null;
 
     return (
         <VStack w="100%" h="100%" alignItems="flex-start">

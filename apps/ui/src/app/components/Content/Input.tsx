@@ -4,7 +4,7 @@ import {
     FormLabel,
     Input,
 } from '@chakra-ui/react';
-import { getFormValue } from '../../utils';
+import { getFormValue, getSingleFormValue } from '../../utils';
 import { ContentFieldProps } from '../../types';
 
 interface ContentInputProps extends ContentFieldProps {
@@ -29,10 +29,10 @@ export const ContentInput = ({
     const key = `${page.formikKey}.${fieldKey}`;
 
     const onChange = (value: string) => {
-        form.setFieldValue(key, value);
+        form.setFieldValue(key, { value });
     };
 
-    const value = getFormValue(key, form);
+    const value = getSingleFormValue(key, form)?.value;
 
     return (
         <FormControl isRequired={!!options?.isRequired}>
