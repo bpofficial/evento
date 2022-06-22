@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Box, HStack } from '@chakra-ui/react';
 import { replaceTextWithInputValue } from '../../utils';
-import { usePages } from '../../hooks/pageContext';
+import { usePages } from '../../hooks';
 
 const stripePromise = loadStripe(
     'pk_test_51H5lSlIHLTnuvRM7Ah4nUAVj66F8BxJRnhhRYcQcyMMUv6AjkaZSQJp0H9EvuAgqjnoS7gHHWFJxU9G3oBbc8RQm00yjqLBvfK'

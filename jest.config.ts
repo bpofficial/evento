@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 import { getJestProjects } from '@nrwl/jest';
 
 export default {

@@ -14,7 +14,7 @@ export const generateColorScheme = (
 ) => {
     const rgb = getRgb(color);
 
-    const obj: any = {};
+    const obj: Record<number, string> = {};
     for (let i = 0; i < 9; i++) {
         obj[`${(9 - i) * 100}`] = shade(rgb, (-5 + (i + 1)) / 10);
     }

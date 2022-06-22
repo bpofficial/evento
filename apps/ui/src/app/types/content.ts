@@ -1,5 +1,5 @@
 import { CanGoNext, PageForm, PageProps } from '.';
-import { ContentComponents } from '../components/Content';
+import { ContentComponents } from '../components';
 
 export interface ContentFieldProps extends PageProps, PageForm {
     fieldKey: string;

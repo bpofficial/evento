@@ -31,4 +31,3 @@ export function App() {
 }
 
 export default App;
-// bg="#E9F1F7"

@@ -1,4 +1,6 @@
 /* eslint-disable */
+// noinspection JSUnusedGlobalSymbols
+
 export default {
   displayName: 'ui',
   preset: '../../jest.preset.js',

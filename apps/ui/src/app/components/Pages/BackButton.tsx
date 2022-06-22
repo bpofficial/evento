@@ -1,6 +1,6 @@
 import { Box, HStack } from '@chakra-ui/react';
 import { BsArrowLeft } from 'react-icons/bs';
-import { usePages } from '../../hooks/pageContext';
+import { usePages } from '../../hooks';
 
 export const BackButton = () => {
     const {

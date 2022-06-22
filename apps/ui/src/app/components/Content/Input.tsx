@@ -4,15 +4,16 @@ import {
     FormLabel,
     Input,
 } from '@chakra-ui/react';
-import { getFormValue, getSingleFormValue } from '../../utils';
+import { getSingleFormValue } from '../../utils';
 import { ContentFieldProps } from '../../types';
+import {HTMLInputTypeAttribute} from 'react';
 
 interface ContentInputProps extends ContentFieldProps {
     label: string;
     options?: {
         placeholder?: string;
         isRequired?: boolean;
-        type?: React.HTMLInputTypeAttribute;
+        type?: HTMLInputTypeAttribute;
         autoFocus?: boolean;
         autoComplete?: string;
         helperText?: string;
@@ -34,6 +35,9 @@ export const ContentInput = ({
 
     const value = getSingleFormValue(key, form)?.value;
 
+    const helperText = options?.helperText ?? '';
+    delete options?.helperText;
+
     return (
         <FormControl isRequired={!!options?.isRequired}>
             <FormLabel>{label}</FormLabel>
@@ -44,7 +48,7 @@ export const ContentInput = ({
                 value={value}
                 onChange={(evt) => onChange(evt.target.value)}
             />
-            <FormHelperText>{options?.helperText}</FormHelperText>
+            <FormHelperText>{helperText}</FormHelperText>
         </FormControl>
     );
 };

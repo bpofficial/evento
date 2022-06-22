@@ -1,5 +1,6 @@
 import { FormikContextType } from 'formik';
 import * as Screens from '../screens';
+import {ComponentProps} from "react";
 
 export interface PageProps {
     page: {
@@ -24,13 +25,9 @@ export interface PageOption<T extends keyof typeof Screens> {
     type: T;
     skipPageCondition?: any;
     options: Omit<
-        React.ComponentProps<typeof Screens[T]>,
+        ComponentProps<typeof Screens[T]>,
         keyof (PageProps & PageForm & CanGoNext)
     >;
 }
 
-export type PageOptions =
-    | PageOption<'AllEvents'>
-    | PageOption<'EasyPayment'>
-    | PageOption<'ScanQR'>
-    | PageOption<'CustomContent'>;
+export type PageOptions = PageOption<'CustomContent'>;

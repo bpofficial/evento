@@ -1,6 +1,6 @@
 import { Box, Button, HStack } from '@chakra-ui/react';
 import { BsArrowRight } from 'react-icons/bs';
-import { usePages } from '../../hooks/pageContext';
+import { usePages } from '../../hooks';
 
 export const NextButton = () => {
     const {

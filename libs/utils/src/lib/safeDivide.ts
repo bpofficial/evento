@@ -5,7 +5,7 @@ export function safeDivide(a: number, b: number) {
     if (b === 0) return Infinity;
 
     // round to 2 decimal places (https://stackoverflow.com/a/18358056)
-    return +(Math.round((a / b + 'e+2') as any) + 'e-2');
+    return +(Math.round((a / b + 'e+2') as unknown as number) + 'e-2');
 }
 
 export const divide = safeDivide;

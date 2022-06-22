@@ -55,9 +55,9 @@ export const ContentCheckboxGroup = ({
                 return exists !== -1;
             } else {
                 if (!(currentValue instanceof Array)) {
-                    return !!(currentValue && currentValue['id'] === item.id);
+                    return (currentValue && currentValue['id'] === item.id);
                 }
-                return !!(currentValue[0] && currentValue[0]['id'] === item.id);
+                return (currentValue[0] && currentValue[0]['id'] === item.id);
             }
         },
         [form, key, options?.multiSelect]

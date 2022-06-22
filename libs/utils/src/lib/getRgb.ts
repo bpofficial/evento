@@ -19,7 +19,7 @@ function is0to255(num: number): boolean {
  */
 export function getRgb(colorString: string): [number, number, number] {
     // short paths
-    const string: keyof typeof colorNames = colorString.trim() as any;
+    const string = colorString.trim() as keyof typeof colorNames;
     if (string in colorNames) return colorNames[string];
     if (/transparent/i.test(string)) return [0, 0, 0];
 

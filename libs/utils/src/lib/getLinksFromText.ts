@@ -1,10 +1,10 @@
 export function getLinksFromText(
     str: string
 ): [string, Map<string, RegExpMatchArray>] {
-    const matches = str.match(/\[([^[]+)\](\(.*\))/gm);
+    const matches = str.match(/\[([^[]+)](\(.*\))/gm);
     if (!matches) return [str, new Map()];
 
-    const singleMatch = /\[([^[]+)\]\((.*)\)/;
+    const singleMatch = /\[([^[]+)]\((.*)\)/;
 
     const links = new Map<string, RegExpMatchArray>();
     for (let i = 0; i < matches.length; i++) {
