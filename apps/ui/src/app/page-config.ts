@@ -1,4 +1,4 @@
-import { PageOptions } from './types/pages';
+import { PageOptions } from './types';
 
 // const GenericPages: PageOptions[] = [
 //     {
@@ -345,6 +345,9 @@ const PokerPages: PageOptions[] = [
 ];
 
 export const Configuration = {
+    Meta: {
+        title: 'Poker Night',
+    },
     Pages: PokerPages,
     Calculations,
 };

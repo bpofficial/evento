@@ -1,5 +1,5 @@
 import { Flex, VStack } from '@chakra-ui/react';
-import { useFormik } from 'formik';
+import { useFormikContext } from 'formik';
 import { NextButton } from './NextButton';
 import { BackButton } from './BackButton';
 import { PageOptions } from '../../types';
@@ -13,13 +13,14 @@ export interface PagesProviderProps {
 
 export const PagesProvider = ({ pages, calculations }: PagesProviderProps) => {
     const inputs = registerInputs(pages, calculations);
-    const form = useFormik({ initialValues: {}, onSubmit: console.log });
-    const pageState = usePagesState(pages);
+    const info = { inputs, calculations };
+
+    const form = useFormikContext();
+    const pageState = usePagesState(pages, info);
     const props = createPageProps({ pageState, form });
     const ctx = {
+        ...info,
         pages,
-        inputs,
-        calculations,
         pageState,
     };
 

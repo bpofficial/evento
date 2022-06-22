@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { PagesProviderProps } from '../components/Pages';
+import { PagesProviderProps } from '../components';
 import { PageOptions } from '../types';
 import { PagesState } from './usePagesState';
 

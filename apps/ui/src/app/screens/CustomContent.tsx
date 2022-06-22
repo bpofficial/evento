@@ -22,9 +22,7 @@ export const CustomContent = ({
     form,
     page,
 }: CustomContentProps) => {
-    const isLoading = useCustomContent(onCanGoNext, form);
-
-    if (isLoading) return null;
+    useCustomContent(onCanGoNext);
 
     return (
         <VStack w="100%" h="100%" alignItems="flex-start">

@@ -1,9 +1,10 @@
 import { useBoolean, usePrevious } from '@chakra-ui/react';
 import { FormikContextType } from 'formik';
 import { useState } from 'react';
-import { PagesProviderProps } from '../components/Pages';
+import { PagesProviderProps } from '../components';
 import * as Screens from '../screens';
 import { PageProps } from '../types';
+import {CalcInfo, useSkip} from "./useSkip";
 
 interface CreatePageProps<T> {
     pageState: PagesState;
@@ -25,13 +26,12 @@ export const createPageProps = <T>({ pageState, form }: CreatePageProps<T>) => {
         val ? actions.setGoNext.on() : actions.setGoNext.off();
     };
     props.form = form;
-
     return props;
 };
 
 export type PagesState = ReturnType<typeof usePagesState>;
 
-export const usePagesState = (pages: PagesProviderProps['pages']) => {
+export const usePagesState = (pages: PagesProviderProps['pages'], info: CalcInfo) => {
     const [canGoNext, setGoNext] = useBoolean();
     const [currentIndex, setCurrentIndex] = useState(0);
     const previousIndex = usePrevious(currentIndex);
@@ -42,16 +42,26 @@ export const usePagesState = (pages: PagesProviderProps['pages']) => {
     const isLastPage = currentIndex === pages.length - 1;
     const isFirstPage = currentIndex === 0;
 
+    const state = {
+        canGoNext,
+        currentIndex,
+        previousIndex,
+        isLastPage,
+        isFirstPage,
+    }
+
+    const { next, previous } = useSkip(pages, state, info);
+
     const nextPage = () => {
         setGoNext.off();
         if (isLastPage) return;
-        setCurrentIndex((x) => x + 1);
+        setCurrentIndex(next);
     };
 
     const previousPage = () => {
         setGoNext.on();
         if (isFirstPage) return;
-        setCurrentIndex((x) => x - 1);
+        setCurrentIndex(previous);
     };
 
     return {
@@ -62,12 +72,6 @@ export const usePagesState = (pages: PagesProviderProps['pages']) => {
             previousPage,
             setGoNext,
         },
-        state: {
-            canGoNext,
-            currentIndex,
-            previousIndex,
-            isLastPage,
-            isFirstPage,
-        },
+        state
     };
 };
