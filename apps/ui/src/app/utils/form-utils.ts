@@ -1,6 +1,6 @@
-import { FormikContextType } from 'formik';
-import { PageOption, PageOptions } from '../types';
-import { calculateField } from './calculate-field';
+import {FormikContextType} from 'formik';
+import {ContentType, PageOption, PageOptions} from '../types';
+import {calculateField} from './calculate-field';
 
 type FieldValue = { value?: any } & Record<string, any>;
 
@@ -50,7 +50,7 @@ export function registerInputs(
                         'ContentPollGroup',
                     ].includes(content.type)
                 ) {
-                    const key = (content.options as any).fieldKey;
+                    const key = (content.options as any).fieldKey
                     inputs.set(key, getInputFormikKey(key, i));
                 }
             }
@@ -93,7 +93,7 @@ export function replaceTextWithInputValue(
 
 export function validateField(
     fieldKey: string,
-    type: 'ContentCheckboxGroup' | 'ContentPollGroup' | 'ContentInput',
+    type: ContentType,
     form: FormikContextType<any>,
     isRequired = false
 ) {
@@ -106,14 +106,17 @@ export function validateField(
     switch (type) {
         case 'ContentPollGroup':
         case 'ContentCheckboxGroup':
-            isValid = !!value;
+            isValid = value;
+            break;
+        case 'ContentPayment':
+            isValid = value?.input;
             break;
         case 'ContentInput':
-            isValid = !!(value && typeof value === 'string' && value !== '');
+            isValid = (value && typeof value === 'string' && value !== '');
             break;
     }
 
-    return isValid;
+    return !!isValid;
 }
 
 export function validatePageRequirements(
@@ -137,6 +140,11 @@ export function validatePageRequirements(
                         !!content.options.options?.isRequired
                     )
                 );
+                break;
+            case 'ContentPayment':
+                key = getInputFormikKey('payment', pageNumber) + '.input';
+                inputs.push(validateField(key, content.type, form,
+                    !!content.options.options?.isRequired))
         }
     });
 

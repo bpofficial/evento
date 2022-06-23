@@ -1,4 +1,4 @@
-import { FormikContextType } from 'formik';
+import {FormikContextType} from 'formik';
 import * as Screens from '../screens';
 import {ComponentProps} from "react";
 
@@ -24,10 +24,10 @@ export interface PageOption<T extends keyof typeof Screens> {
     buttonText?: string;
     type: T;
     skipPageCondition?: any;
-    options: Omit<
-        ComponentProps<typeof Screens[T]>,
-        keyof (PageProps & PageForm & CanGoNext)
-    >;
+    hideBackButton?: boolean
+    hideIcon?: boolean;
+    options: Omit<ComponentProps<typeof Screens[T]>,
+        keyof (PageProps & PageForm & CanGoNext)>;
 }
 
 export type PageOptions = PageOption<'CustomContent'>;

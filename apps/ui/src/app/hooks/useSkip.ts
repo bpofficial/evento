@@ -6,9 +6,9 @@ import {useFormikContext} from "formik";
 
 type ReturnFn = (idx: number) => number;
 export type CalcInfo = { inputs: Map<string, string>, calculations: Record<string, string> };
-type UseSkip = (p: PageOptions[], s: PagesState['state'], info: CalcInfo) => { next: ReturnFn, previous: ReturnFn };
+type UseSkip = (p: PageOptions[], s: Omit<PagesState['state'], 'canGoNext'>, info: CalcInfo) => { next: ReturnFn, previous: ReturnFn };
 
-export const useSkip: UseSkip = (pages: PageOptions[], state: PagesState['state'], info) => {
+export const useSkip: UseSkip = (pages, state, info) => {
     const form = useFormikContext();
 
     // Handle skipping logic
@@ -19,23 +19,32 @@ export const useSkip: UseSkip = (pages: PageOptions[], state: PagesState['state'
         return false;
     }, [form, info]);
 
-    const next = useCallback((idx: number) => {
-        if (state.isLastPage) return 0;
-        if (shouldSkip(pages[idx + 1])) {
-            if (idx + 2 > pages.length - 1) return 0;
-            return idx + 2;
+    /**
+     * Recursively skip the next or previous pages, looking ahead or behind for consecutive skips.
+     */
+    const recurseSkip = useCallback((idx: number, dir: -1 | 1): number => {
+        const len = pages.length - 1, idx1 = idx + dir;
+
+        // If on the first & going back or on the last page and going forward, return 0.
+        if ((dir < 0 && idx <= 1) || (dir > 0 && idx >= len)) return 0;
+
+        // Calculate a validity metric. If less than 0, then invalid action return 0.
+        const cmp = dir < 0 ? Math.max(idx1, 0) : Math.max(len - idx1, 0);
+        if (cmp < 0) return 0;
+
+        if (shouldSkip(pages[idx1])) {
+            return recurseSkip(idx1, dir);
         }
-        return idx + 1;
-    }, [pages, shouldSkip, state.isLastPage])
+        return idx + dir;
+    }, [pages, shouldSkip]);
+
+    const next = useCallback((idx: number) => {
+        return recurseSkip(idx, 1);
+    }, [recurseSkip])
 
     const previous = useCallback((idx: number) => {
-        if (state.isFirstPage) return 0;
-        if (shouldSkip(pages[idx - 1])) {
-            if (idx - 2 < 0) return 0;
-            return idx - 2;
-        }
-        return idx - 1;
-    }, [pages, shouldSkip, state.isFirstPage])
+        return recurseSkip(idx, -1);
+    }, [recurseSkip])
 
     return {next, previous};
 };

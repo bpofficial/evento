@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/react';
+import {VStack} from '@chakra-ui/react';
 import {
     ContentCheckboxGroup,
     ContentHeading,
@@ -9,34 +9,34 @@ import {
     ContentSpacing,
     ContentText,
 } from '../components';
-import { useCustomContent } from '../hooks/useCustomContent';
-import { CanGoNext, Content } from '../types';
+import {useCustomContent} from '../hooks/useCustomContent';
+import {CanGoNext, Content} from '../types';
 
 interface CustomContentProps extends CanGoNext {
     content: Content[];
 }
 
 export const CustomContent = ({
-    content,
-    onCanGoNext,
-    form,
-    page,
-}: CustomContentProps) => {
+                                  content,
+                                  onCanGoNext,
+                                  form,
+                                  page,
+                              }: CustomContentProps) => {
     useCustomContent(onCanGoNext);
 
     return (
         <VStack w="100%" h="100%" alignItems="flex-start">
-            {content.map(({ type, options }, key) => {
+            {content.map(({type, options}, key) => {
                 switch (type) {
                     case 'ContentHeading':
                         return (
                             <ContentHeading
-                                {...{ key, ...options, form, page }}
+                                {...{key, ...options, form, page}}
                             />
                         );
                     case 'ContentText':
                         return (
-                            <ContentText {...{ key, ...options, form, page }} />
+                            <ContentText {...{key, ...options, form, page}} />
                         );
                     case 'ContentInput':
                         return (
@@ -53,29 +53,29 @@ export const CustomContent = ({
                     case 'ContentSpacing':
                         return (
                             <ContentSpacing
-                                {...{ key, ...options, form, page }}
+                                {...{key, ...options, form, page}}
                             />
                         );
                     case 'ContentLink':
                         return (
-                            <ContentLink {...{ key, ...options, form, page }} />
+                            <ContentLink {...{key, ...options, form, page}} />
                         );
                     case 'ContentCheckboxGroup':
                         return (
                             <ContentCheckboxGroup
-                                {...{ key, ...options, form, page }}
+                                {...{key, ...options, form, page}}
                             />
                         );
                     case 'ContentPollGroup':
                         return (
                             <ContentPollGroup
-                                {...{ key, ...options, form, page }}
+                                {...{key, ...options, form, page}}
                             />
                         );
                     case 'ContentPayment':
                         return (
                             <ContentPayment
-                                {...{ key, ...options, form, page }}
+                                {...{key, ...options, form, page}}
                             />
                         );
                     default:

@@ -1,7 +1,7 @@
-import { useFormikContext} from 'formik';
-import { useEffect, useMemo } from 'react';
-import { usePages } from '../hooks';
-import { validatePageRequirements } from '../utils';
+import {useFormikContext} from 'formik';
+import {useEffect, useMemo} from 'react';
+import {usePages} from '../hooks';
+import {validatePageRequirements} from '../utils';
 
 export const useCustomContent = (
     onCanGoNext: (val?: boolean) => void,
@@ -9,7 +9,7 @@ export const useCustomContent = (
     const form = useFormikContext()
     const {
         pages,
-        pageState: { state },
+        pageState: {state},
     } = usePages();
 
     const inputsAreValid = useMemo(() => {
@@ -22,7 +22,7 @@ export const useCustomContent = (
             );
         }
         return true;
-    }, [pages, state.currentIndex, form]);
+    }, [state.currentIndex, pages, form]);
 
     useEffect(() => {
         onCanGoNext(inputsAreValid);
