@@ -1,0 +1,6 @@
+CreatePaymentIntent:
+    handler: ./src/create-payment-intent/handler.handler
+    events:
+        -   http:
+                method: POST
+                path: /billing/checkout

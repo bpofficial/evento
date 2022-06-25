@@ -1,9 +1,9 @@
-import { ColorModeScript } from '@chakra-ui/react';
-import { StrictMode } from 'react';
+import {ColorModeScript} from '@chakra-ui/react';
+import {StrictMode} from 'react';
 import * as ReactDOM from 'react-dom/client';
 
-import App from './app/app';
 import reportWebVitals from './reportWebVitals';
+import {App} from "./app/app";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -11,8 +11,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <StrictMode>
-        <ColorModeScript />
-        <App />
+        <ColorModeScript/>
+        <App/>
     </StrictMode>
 );
 

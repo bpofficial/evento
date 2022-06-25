@@ -3,5 +3,8 @@
 // noinspection JSUnusedGlobalSymbols
 
 export const environment = {
-  production: false,
-};
+    production: false,
+    api: {
+        baseUrl: ''
+    }
+} as const;

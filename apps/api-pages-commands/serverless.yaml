@@ -1,0 +1,60 @@
+service: pages-commands
+
+plugins:
+    - serverless-localstack
+    - serverless-webpack
+    - serverless-offline
+    - serverless-prune-plugin
+    - serverless-deployment-bucket
+
+package:
+    individually: false
+    include:
+        - ../../node_modules/**
+
+custom:
+    serviceName: pages
+    stage: ${opt:stage, '${self:custom.serviceName}'}
+    prune:
+        automatic: true
+        number: 2
+    serverless-offline:
+        noPrependStageInUrl: true
+        httpPort: 4003
+        lambdaPort: 4033
+    deploymentBucketName: ${self:custom.stage}-${opt:region, self:provider.region}-serverless-deployment-bucket
+    webpack:
+        includeModules:
+            nodeModulesRelativeDir: '../../'
+            packagePath: '../../package.json'
+        webpackConfig: '../../webpack.config.js'
+        packager: 'yarn'
+        packExternalModulesMaxBuffer: 204800
+        keepOutputDirectory: true
+    environment:
+        ELASTICACHE_URL:
+            dev: 'redis://:testpass@localhost:6379'
+            prod: ${ssm:/prod/redis.url, ''}
+        MONGO_DB_URL:
+            dev: 'mongodb://root:root@localhost:27017/evento?authSource=admin'
+            prod: ${ssm:/prod/mongo.url, ''}
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    logRetentionInDays: 30
+    region: ap-southeast-2
+    tags:
+        service: ${self:custom.serviceName}
+    deploymentBucket:
+        name: ${self:custom.deploymentBucketName}
+        blockPublicAccess: true
+        serverSideEncryption: AES256
+        maxPreviousDeploymentArtifacts: 2
+    environment:
+        STAGE: ${opt:stage}
+        ELASTICACHE_URL: ${self:custom.environment.ELASTICACHE_URL.${self:custom.stage}}
+        MONGO_DB_URL: ${self:custom.environment.MONGO_DB_URL.${self:custom.stage}}
+
+functions:
+    - ${file(./sls/definitions.yaml)}

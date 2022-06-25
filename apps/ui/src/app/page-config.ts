@@ -1,5 +1,3 @@
-import {PageOptions} from './types';
-
 // const GenericPages: PageOptions[] = [
 //     {
 //         type: 'CustomContent',
@@ -192,7 +190,6 @@ import {PageOptions} from './types';
 //         },
 //     },
 // ];
-
 const Calculations = {
     payableAmount: {
         // if 'gettingPizza' === true then $5.00 else $0.00
@@ -200,7 +197,7 @@ const Calculations = {
     },
 };
 
-const PokerPages: PageOptions[] = [
+const PokerPages: any[] = [
     {
         type: 'CustomContent',
         options: {
@@ -286,12 +283,14 @@ const PokerPages: PageOptions[] = [
     },
     {
         type: 'CustomContent',
-        buttonText: 'Pay Now',
-        hideIcon: true,
-        skipPageCondition: {
-            $not: ['$payableAmount'],
-        },
         options: {
+            primaryButton: {
+                text: "Pay Now",
+                hideIcon: true
+            },
+            skipPageCondition: {
+                $not: ['$payableAmount'],
+            },
             content: [
                 {
                     type: 'ContentHeading',
@@ -324,8 +323,14 @@ const PokerPages: PageOptions[] = [
     },
     {
         type: 'CustomContent',
-        hideBackButton: true,
         options: {
+            submitOnLoad: true,
+            backButton: {
+                hide: true
+            },
+            primaryButton: {
+                hide: true
+            },
             content: [
                 {
                     type: 'ContentHeading',

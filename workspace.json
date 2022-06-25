@@ -2,8 +2,20 @@
     "$schema": "./node_modules/nx/schemas/workspace-schema.json",
     "version": 2,
     "projects": {
+        "api-billing-commands": "apps/api-billing-commands",
+        "api-billing-queries": "apps/api-billing-queries",
+        "api-billing-stack": "apps/api-billing-stack",
+        "api-client": "libs/api-client",
+        "api-pages-commands": "apps/api-pages-commands",
+        "api-pages-queries": "apps/api-pages-queries",
+        "api-pages-stack": "apps/api-pages-stack",
+        "api-utils": "libs/api-utils",
+        "calculations": "libs/calculations",
+        "models": "libs/models",
         "ui": "apps/ui",
+        "ui-bits": "libs/ui-bits",
         "ui-e2e": "apps/ui-e2e",
+        "ui-ssr": "apps/ui-ssr",
         "utils": "libs/utils"
     }
 }

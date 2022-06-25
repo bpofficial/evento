@@ -1,0 +1,9 @@
+GetRenderedUI:
+    handler: ./src/app/handler.handler
+    events:
+        #        -   http:
+        #                method: GET
+        #                path: /{formId}
+        -   http:
+                method: GET
+                path: /
