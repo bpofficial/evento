@@ -11,6 +11,7 @@ import {
 } from '../components';
 import {useCustomContent} from '../hooks/useCustomContent';
 import {CanGoNext, Content} from '../types';
+import useSSR from "use-ssr";
 
 interface CustomContentProps extends CanGoNext {
     content: Content[];
@@ -22,6 +23,8 @@ export const CustomContent = ({
                                   form,
                                   page,
                               }: CustomContentProps) => {
+    const ssr = useSSR()
+    console.log({ssr});
     useCustomContent(onCanGoNext);
 
     return (

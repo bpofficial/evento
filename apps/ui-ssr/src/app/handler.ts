@@ -16,11 +16,10 @@ export const handler = async (event: APIGatewayEvent) => {
                 formId: 'test',
                 calculations: PokerCalculations,
                 pages: PokerPages
-            })
-        },
-        helmet: {
-            title: 'Poker Night',
-            bodyAttributes: 'style="position: fixed; height: 100%"'
+            }),
+            helmet: {
+                title: 'Poker Night'
+            }
         }
     }
 

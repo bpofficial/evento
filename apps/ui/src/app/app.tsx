@@ -5,5 +5,5 @@ export const App = () => {
     // not SSR
     const configuration = {} as any;
 
-    return <EventoApp {...{configuration, environment}} />
+    return <EventoApp {...{configuration, environment, helmet: {} as any}} />
 }

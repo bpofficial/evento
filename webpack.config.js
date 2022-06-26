@@ -6,7 +6,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 const node_dir = __dirname + '/node_modules';
-
+console.log(slsw.lib.entries);
 module.exports = {
     externals: [nodeExternals()],
     devtool: 'source-map',

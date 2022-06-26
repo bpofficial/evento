@@ -25,6 +25,7 @@ export const ContentInput = ({
     const key = `${page.formikKey}.${fieldKey}`;
 
     const onChange = (value: string) => {
+        console.log(value)
         form.setFieldValue(key, {value});
     };
 
