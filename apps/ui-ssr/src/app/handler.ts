@@ -1,8 +1,8 @@
-import { APIGatewayEvent, Context } from 'aws-lambda';
-import { renderApplication, RenderContext } from './render';
-import { EventoApp } from '@evento/ui-bits';
-import { join } from 'path';
-import { PokerCalculations, PokerPages } from './test-config';
+import {APIGatewayEvent, Context} from 'aws-lambda';
+import {renderApplication, RenderContext} from './render';
+import {EventoApp} from '@evento/ui-bits';
+import {join} from 'path';
+import {PokerCalculations, PokerPages} from './test-config';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const StaticFileHandler = require('serverless-aws-static-file-handler');
@@ -14,7 +14,7 @@ export const handler = async () => {
         props: {
             environment: {
                 api: {
-                    baseUrl: '',
+                    baseUrl: 'http://localhost',
                 },
             },
             configuration: {
