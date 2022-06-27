@@ -1,33 +1,45 @@
-import {APIGatewayEvent} from "aws-lambda";
-import {renderApplication, RenderContext} from "./render";
-import {EventoApp} from "@evento/ui-bits";
-import {PageModel} from "@evento/models";
-import {PokerCalculations, PokerPages} from "./test-config";
+import { APIGatewayEvent, Context } from 'aws-lambda';
+import { renderApplication, RenderContext } from './render';
+import { EventoApp } from '@evento/ui-bits';
+import { join } from 'path';
+import { PokerCalculations, PokerPages } from './test-config';
 
-export const handler = async (event: APIGatewayEvent) => {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const StaticFileHandler = require('serverless-aws-static-file-handler');
+const clientFilesPath = join(__dirname, '../assets/');
+const fileHandler = new StaticFileHandler(clientFilesPath);
+
+export const handler = async () => {
     const context: RenderContext<typeof EventoApp> = {
         props: {
             environment: {
                 api: {
-                    baseUrl: ''
-                }
+                    baseUrl: '',
+                },
             },
-            configuration: new PageModel({
-                formId: 'test',
+            configuration: {
+                formId: '123',
+                pages: PokerPages,
                 calculations: PokerCalculations,
-                pages: PokerPages
-            }),
+            },
             helmet: {
-                title: 'Poker Night'
-            }
-        }
-    }
+                title: 'Poker Night',
+            },
+        },
+    };
 
     return {
         statusCode: 200,
         headers: {
-            'Content-Type': 'text/html'
+            'Content-Type': 'text/html',
         },
-        body: renderApplication(EventoApp, context)
+        body: renderApplication(EventoApp, context),
+    };
+};
+
+export const assets = async (event: APIGatewayEvent, context: Context) => {
+    if (!event.path.startsWith('/assets/')) {
+        throw new Error(`File not found.`);
     }
-}
+    return fileHandler.get(event, context);
+};

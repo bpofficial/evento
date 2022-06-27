@@ -1,14 +1,13 @@
-import {useBoolean} from "@chakra-ui/react";
-import {CalcInfo, useSkip} from "./useSkip";
-import {Dispatch, SetStateAction, useCallback} from "react";
-import {PageOptions} from "../types";
-import {PagesState} from "./usePagesState";
-import {useButtonHandlers} from "./useButtonHandlers";
+import { useBoolean } from '@chakra-ui/react';
+import { CalcInfo, useSkip } from './useSkip';
+import { Dispatch, SetStateAction, useCallback } from 'react';
+import { PageOptions } from '../types';
+import { useButtonHandlers } from './useButtonHandlers';
 
 interface UsePageTraversalProps {
-    pages: PageOptions[];
-    state: Omit<PagesState['state'], 'canGoNext'>;
-    info: CalcInfo;
+    pages?: PageOptions[];
+    state?: any;
+    info?: CalcInfo;
     currentIndex: number;
     setCurrentIndex: Dispatch<SetStateAction<number>>;
     buttonHandlers: ReturnType<typeof useButtonHandlers>;
@@ -17,23 +16,41 @@ interface UsePageTraversalProps {
 }
 
 export const usePageTraversal = (props: UsePageTraversalProps) => {
-    const {buttonHandlers, loading, currentIndex, setCurrentIndex, info, state, pages, transition} = props;
+    const {
+        buttonHandlers,
+        loading,
+        currentIndex,
+        setCurrentIndex,
+        info,
+        pages,
+        transition,
+    } = props;
     const [canGoNext, setCanGoNext] = useBoolean();
-    const {clearButtonHandlers, handlePress} = buttonHandlers
+    const { clearButtonHandlers, handlePress } = buttonHandlers;
 
-    const {next, previous} = useSkip(pages, state, info);
+    const { next, previous } = useSkip({ pages, info });
 
     const nextPage = useCallback(() => {
         handlePress('next', () => {
             setCanGoNext.off();
             loading.off();
-            if (currentIndex >= pages.length - 1) return;
+            if (currentIndex >= (pages?.length ?? 0) - 1) return;
             transition.on();
             // clear the handler on success
             clearButtonHandlers();
             setCurrentIndex(next);
         });
-    }, [clearButtonHandlers, currentIndex, handlePress, loading, next, pages.length, setCanGoNext, setCurrentIndex, transition]);
+    }, [
+        clearButtonHandlers,
+        currentIndex,
+        handlePress,
+        loading,
+        next,
+        pages?.length,
+        setCanGoNext,
+        setCurrentIndex,
+        transition,
+    ]);
 
     const previousPage = useCallback(() => {
         handlePress('prev', () => {
@@ -45,7 +62,16 @@ export const usePageTraversal = (props: UsePageTraversalProps) => {
             clearButtonHandlers();
             setCurrentIndex(previous);
         });
-    }, [clearButtonHandlers, currentIndex, handlePress, loading, previous, setCanGoNext, setCurrentIndex, transition]);
+    }, [
+        clearButtonHandlers,
+        currentIndex,
+        handlePress,
+        loading,
+        previous,
+        setCanGoNext,
+        setCurrentIndex,
+        transition,
+    ]);
 
-    return {canGoNext, setCanGoNext, nextPage, previousPage};
-}
+    return { canGoNext, setCanGoNext, nextPage, previousPage };
+};

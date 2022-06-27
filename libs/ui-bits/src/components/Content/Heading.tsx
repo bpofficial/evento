@@ -1,6 +1,6 @@
-import {Heading, ThemingProps, TypographyProps} from '@chakra-ui/react';
-import {useReplaceInputValue} from '../../hooks/useReplaceInputValue';
-import {PageForm} from '../../types';
+import { Heading, ThemingProps, TypographyProps } from '@chakra-ui/react';
+import { useReplaceInputValue } from '../../hooks/useReplaceInputValue';
+import { PageForm } from '../../types';
 
 interface ContentHeadingProps extends PageForm {
     value: string;
@@ -10,12 +10,8 @@ interface ContentHeadingProps extends PageForm {
     };
 }
 
-export const ContentHeading = ({
-                                   value,
-                                   options,
-                                   form,
-                               }: ContentHeadingProps) => {
-    value = useReplaceInputValue(value, form.values);
+export const ContentHeading = ({ value, options }: ContentHeadingProps) => {
+    value = useReplaceInputValue(value);
 
     return (
         <Heading w="100%" {...options}>

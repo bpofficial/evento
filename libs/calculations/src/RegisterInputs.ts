@@ -1,10 +1,10 @@
-import {getInputFormKey} from "./FormUtils";
-import {Page} from "../../models/src";
+import { getInputFormKey } from './FormUtils';
 
 export function registerInputs(
-    pages: Page[],
-    calculations: Record<string, any>
+    pages?: any[],
+    calculations: Record<string, any> = {}
 ) {
+    if (!pages) return new Map();
     const inputs = new Map<string, string>();
     for (let i = 0; i < pages.length; i++) {
         const page = pages[i];
@@ -18,8 +18,11 @@ export function registerInputs(
                         'ContentPollGroup',
                     ].includes(content.type)
                 ) {
-                    const key = (content.options as any).fieldKey
-                    inputs.set(key, getInputFormKey(key, i));
+                    const key = (content.options as any).fieldKey;
+                    const formKey = getInputFormKey(key, i);
+                    if (formKey) {
+                        inputs.set(key, formKey);
+                    }
                 }
             }
         }

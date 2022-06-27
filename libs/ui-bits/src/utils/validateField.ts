@@ -1,5 +1,5 @@
-import {ContentType} from "../types";
-import {getSingleFormValue} from "@evento/calculations";
+import { ContentType } from '../types';
+import { getSingleFormValue } from '@evento/calculations';
 
 export function validateField(
     fieldKey: string,
@@ -20,7 +20,7 @@ export function validateField(
             isValid = value;
             break;
         case 'ContentInput':
-            isValid = (value && typeof value === 'string' && value !== '');
+            isValid = value && typeof value === 'string' && value !== '';
             break;
     }
 

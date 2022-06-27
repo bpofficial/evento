@@ -1,19 +1,20 @@
-import {Box, HStack} from '@chakra-ui/react';
-import {BsArrowLeft} from 'react-icons/bs';
-import {usePages} from '../../hooks';
+import { Box, HStack } from '@chakra-ui/react';
+import { BsArrowLeft } from 'react-icons/bs';
+import { usePages } from '../../hooks';
 
 export const BackButton = () => {
-    const {
-        pageState: {state, actions, currentPage},
-    } = usePages();
+    const { pageState } = usePages();
 
-    const {hide} = currentPage.options.backButton ?? {};
+    if (!pageState) return null;
+    const { state, actions, currentPage } = pageState;
+
+    const { hide } = (currentPage as any)?.options?.backButton ?? {};
 
     if (state.isFirstPage || hide) return null;
 
     return (
         <HStack mb="2" onClick={actions.previousPage}>
-            <BsArrowLeft/>
+            <BsArrowLeft />
             <Box fontWeight="600">Back</Box>
         </HStack>
     );

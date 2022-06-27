@@ -1,5 +1,6 @@
 GetRenderedUI:
     handler: ./src/app/handler.handler
+    memorySize: 512
     events:
         #        -   http:
         #                method: GET
@@ -7,3 +8,12 @@ GetRenderedUI:
         -   http:
                 method: GET
                 path: /
+
+GetAssets:
+    handler: ./src/app/handler.assets
+    memorySize: 512
+    events:
+        -   http:
+                method: GET
+                path: /assets/{pathvar+}
+

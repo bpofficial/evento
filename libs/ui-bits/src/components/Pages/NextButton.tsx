@@ -1,13 +1,14 @@
-import {Box, Button, HStack} from '@chakra-ui/react';
-import {BsArrowRight} from 'react-icons/bs';
-import {usePages} from '../../hooks';
+import { Box, Button, HStack } from '@chakra-ui/react';
+import { BsArrowRight } from 'react-icons/bs';
+import { usePages } from '../../hooks';
 
 export const NextButton = () => {
-    const {
-        pageState: {state, currentPage, actions, isLoading},
-    } = usePages();
+    const { pageState } = usePages();
 
-    const {text, hideIcon, hide} = currentPage.options.primaryButton ?? {};
+    if (!pageState) return null;
+    const { state, currentPage, actions, isLoading } = pageState;
+    const { text, hideIcon, hide } =
+        (currentPage as any)?.options?.primaryButton ?? {};
 
     if (hide) return null;
 
@@ -18,14 +19,11 @@ export const NextButton = () => {
             mt="6"
             onClick={actions.nextPage}
             disabled={!state.canGoNext}
-            {...{isLoading}}
+            {...{ isLoading }}
         >
             <HStack>
-                <Box>
-                    {text ||
-                        (state.isLastPage ? 'Submit' : 'Next')}
-                </Box>
-                {!hideIcon ? <BsArrowRight/> : null}
+                <Box>{text || (state.isLastPage ? 'Submit' : 'Next')}</Box>
+                {!hideIcon ? <BsArrowRight /> : null}
             </HStack>
         </Button>
     );

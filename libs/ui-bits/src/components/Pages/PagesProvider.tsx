@@ -1,37 +1,41 @@
-import {Flex, VStack} from '@chakra-ui/react';
-import {useFormikContext} from 'formik';
-import {NextButton} from './NextButton';
-import {BackButton} from './BackButton';
-import {PageOptions} from '../../types';
-import {createPageProps, PagesContext, usePagesState, useSubmit} from '../../hooks';
-import {useMemo} from "react";
-import {registerInputs} from "@evento/calculations";
+import { Flex, VStack } from '@chakra-ui/react';
+import { useFormikContext } from 'formik';
+import { NextButton } from './NextButton';
+import { BackButton } from './BackButton';
+import {
+    createPageProps,
+    PagesContext,
+    usePagesState,
+    useSubmit,
+} from '../../hooks';
+import { useMemo } from 'react';
+import { registerInputs } from '@evento/calculations';
+import { AppProps } from '../../evento';
 
 export interface PagesProviderProps {
-    pages: PageOptions[];
-    calculations: Record<string, any>;
-    formId: string;
+    configuration: AppProps['configuration'];
 }
 
-export const PagesProvider = ({pages, calculations, formId}: PagesProviderProps) => {
+export const PagesProvider = ({ configuration }: PagesProviderProps) => {
+    const { formId, pages, calculations } = configuration ?? {};
     const submitFn = useSubmit(formId);
     const inputs = registerInputs(pages, calculations);
-    const info = {inputs, calculations};
+    const info = { inputs, calculations };
 
     const form = useFormikContext();
     const pageState = usePagesState(pages, info);
     const props = useMemo(() => {
-        return createPageProps({pageState, form})
+        return createPageProps({ pageState, form });
     }, [form, pageState]);
 
     const ctx = {
         ...info,
         pages,
         pageState,
-        submitFn
-    };
+        submitFn,
+    } as any;
 
-    const {Component, transitioning} = pageState;
+    const { Component, transitioning } = pageState ?? {};
 
     return (
         <PagesContext.Provider value={ctx}>
@@ -41,10 +45,12 @@ export const PagesProvider = ({pages, calculations, formId}: PagesProviderProps)
                 flexDirection="column"
             >
                 <VStack alignItems="flex-start" h="100%">
-                    <BackButton/>
-                    {!transitioning ? <Component {...props} /> : null}
+                    <BackButton />
+                    {!transitioning && Component ? (
+                        <Component {...props} />
+                    ) : null}
                 </VStack>
-                <NextButton/>
+                <NextButton />
             </Flex>
         </PagesContext.Provider>
     );

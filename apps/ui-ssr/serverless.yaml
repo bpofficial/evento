@@ -3,8 +3,6 @@ service: ui-render
 plugins:
     - serverless-webpack
     - serverless-offline
-    - serverless-prune-plugin
-    - serverless-deployment-bucket
 
 package:
     individually: true
@@ -14,9 +12,6 @@ package:
 custom:
     serviceName: ui
     stage: ${opt:stage, '${self:custom.serviceName}'}
-    prune:
-        automatic: true
-        number: 2
     serverless-offline:
         noPrependStageInUrl: true
         httpPort: 3000
@@ -28,8 +23,6 @@ custom:
             packagePath: '../../package.json'
         webpackConfig: './webpack.config.js'
         packager: 'yarn'
-        packExternalModulesMaxBuffer: 204800
-        keepOutputDirectory: true
     environment:
         ELASTICACHE_URL:
             dev: 'redis://:testpass@localhost:6379'
@@ -45,11 +38,6 @@ provider:
     region: ap-southeast-2
     tags:
         service: ${self:custom.serviceName}
-    deploymentBucket:
-        name: ${self:custom.deploymentBucketName}
-        blockPublicAccess: true
-        serverSideEncryption: AES256
-        maxPreviousDeploymentArtifacts: 2
     environment:
         STAGE: ${opt:stage}
         ELASTICACHE_URL: ${self:custom.environment.ELASTICACHE_URL.${self:custom.stage}}

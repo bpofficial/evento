@@ -1,7 +1,12 @@
-import {FormControl, FormHelperText, FormLabel, Input,} from '@chakra-ui/react';
-import {getSingleFormValue} from '@evento/calculations';
-import {ContentFieldProps} from '../../types';
-import {HTMLInputTypeAttribute} from 'react';
+import {
+    FormControl,
+    FormHelperText,
+    FormLabel,
+    Input,
+} from '@chakra-ui/react';
+import { getSingleFormValue } from '@evento/calculations';
+import { ContentFieldProps } from '../../types';
+import { HTMLInputTypeAttribute, useEffect } from 'react';
 
 interface ContentInputProps extends ContentFieldProps {
     label: string;
@@ -16,32 +21,28 @@ interface ContentInputProps extends ContentFieldProps {
 }
 
 export const ContentInput = ({
-                                 label,
-                                 options,
-                                 page,
-                                 form,
-                                 fieldKey,
-                             }: ContentInputProps) => {
+    label,
+    options,
+    page,
+    form,
+    fieldKey,
+}: ContentInputProps) => {
     const key = `${page.formikKey}.${fieldKey}`;
+    const value = getSingleFormValue(key, form.values)?.value;
+    const { helperText, ...props } = options ?? {};
 
     const onChange = (value: string) => {
-        console.log(value)
-        form.setFieldValue(key, {value});
+        form.setFieldValue(key, { value });
     };
-
-    const value = getSingleFormValue(key, form.values)?.value;
-
-    const helperText = options?.helperText ?? '';
-    delete options?.helperText;
 
     return (
         <FormControl isRequired={!!options?.isRequired}>
             <FormLabel>{label}</FormLabel>
             <Input
-                {...options}
+                {...props}
                 size="lg"
                 w="100%"
-                value={value}
+                value={value ?? ''}
                 onChange={(evt) => onChange(evt.target.value)}
             />
             <FormHelperText>{helperText}</FormHelperText>

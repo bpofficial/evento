@@ -1,8 +1,8 @@
-import {Text, TextProps, TypographyProps} from '@chakra-ui/react';
-import {getLinksFromText} from '@evento/utils';
-import {useReplaceInputValue} from '../../hooks/useReplaceInputValue';
-import {ContentItem, PageForm} from '../../types';
-import {ContentLink} from './Link';
+import { Text, TextProps, TypographyProps } from '@chakra-ui/react';
+import { getLinksFromText } from '@evento/utils';
+import { useReplaceInputValue } from '../../hooks/useReplaceInputValue';
+import { ContentItem, PageForm } from '../../types';
+import { ContentLink } from './Link';
 
 interface ContentTextProps extends PageForm {
     value: string;
@@ -31,8 +31,8 @@ function splitTextAtLinks(str: string, links: Map<string, RegExpMatchArray>) {
     return result;
 }
 
-export const ContentText = ({value, options, form}: ContentTextProps) => {
-    const replaced = useReplaceInputValue(value, form.values);
+export const ContentText = ({ value, options, form }: ContentTextProps) => {
+    const replaced = useReplaceInputValue(value);
     const [str, links] = getLinksFromText(replaced);
     const contentArr = splitTextAtLinks(str, links);
 
@@ -43,7 +43,7 @@ export const ContentText = ({value, options, form}: ContentTextProps) => {
                     case 'string':
                         return c;
                     case 'object':
-                        return <ContentLink {...{key, ...c.options}} />;
+                        return <ContentLink {...{ key, ...c.options }} />;
                     default:
                         return null;
                 }

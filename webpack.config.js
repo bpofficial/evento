@@ -1,15 +1,13 @@
 const path = require('path');
-const webpack = require('webpack');
 const slsw = require('serverless-webpack');
 const nodeExternals = require('webpack-node-externals');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const node_dir = __dirname + '/node_modules';
-console.log(slsw.lib.entries);
 module.exports = {
     externals: [nodeExternals()],
     devtool: 'source-map',
+    name: 'serverless',
     entry: slsw.lib.entries,
     resolve: {
         extensions: ['.js', '.json', '.ts', '.tsx'],

@@ -1,4 +1,4 @@
-import {calculateField} from './CalculateField';
+import { calculateField } from './CalculateField';
 
 export type FormValues = Record<string, any>;
 export type FieldValue = { value?: any } & Record<string, any>;
@@ -26,7 +26,8 @@ export function getFormValue(
     return value;
 }
 
-export function getInputFormKey(key: string, sourcePage: number) {
+export function getInputFormKey(key: string, sourcePage?: number) {
+    if (!(typeof sourcePage === 'number')) return null;
     return `${sourcePage}_CustomContent.${key}`;
 }
 
@@ -52,4 +53,3 @@ export function replaceTextWithInputValue(
     }
     return str;
 }
-

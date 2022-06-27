@@ -1,37 +1,41 @@
-import {useFormikContext} from 'formik';
-import {useEffect, useMemo} from 'react';
-import {usePages} from '../hooks';
-import {validatePageRequirements} from '../utils';
+import { useFormikContext } from 'formik';
+import { useEffect, useMemo } from 'react';
+import { usePages } from '../hooks';
+import { validatePageRequirements } from '../utils';
 
-export const useCustomContent = (
-    onCanGoNext: (val?: boolean) => void,
-) => {
-    const form = useFormikContext<any>()
-    const {
-        pages,
-        pageState: {state, currentPage},
-        submitFn
-    } = usePages();
+export const useCustomContent = (onCanGoNext: (val?: boolean) => void) => {
+    const form = useFormikContext<any>();
+    const { pages, pageState, submitFn } = usePages();
+    const { state, currentPage } = pageState ?? {};
 
     const inputsAreValid = useMemo(() => {
-        const currentPage = pages[state.currentIndex];
-        if (currentPage.type === 'CustomContent') {
-            return validatePageRequirements(
-                currentPage,
-                state.currentIndex,
-                form.values
-            );
+        if (typeof state?.currentIndex === 'number') {
+            const currentPage = pages[state?.currentIndex];
+            if (currentPage.type === 'CustomContent') {
+                return validatePageRequirements(
+                    currentPage,
+                    state.currentIndex,
+                    form.values
+                );
+            }
+            return true;
         }
-        return true;
-    }, [state.currentIndex, pages, form]);
+        return false;
+    }, [state, pages, form]);
 
     useEffect(() => {
-        if (inputsAreValid && currentPage.options.submitOnLoad) {
-            submitFn().then(data => {
-                console.log(data)
-            }).catch(console.warn)
+        if (
+            inputsAreValid &&
+            currentPage &&
+            (currentPage as any).options?.submitOnLoad
+        ) {
+            submitFn()
+                .then((data) => {
+                    console.log(data);
+                })
+                .catch(console.warn);
         }
-    }, [inputsAreValid, currentPage, submitFn])
+    }, [inputsAreValid, currentPage, submitFn]);
 
     useEffect(() => {
         onCanGoNext(inputsAreValid);

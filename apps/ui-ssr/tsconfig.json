@@ -2,10 +2,7 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "jsx": "react-jsx",
-        "lib": [
-            "ES2021",
-            "dom"
-        ],
+        "lib": ["ES2021", "dom"],
         "jsxImportSource": "@emotion/react",
         "allowJs": true,
         "esModuleInterop": true,
