@@ -5,7 +5,7 @@ plugins:
     - serverless-offline
 
 package:
-    individually: true
+    individually: false
     include:
         - ../../node_modules/**
 
@@ -26,10 +26,10 @@ custom:
     environment:
         ELASTICACHE_URL:
             dev: 'redis://:testpass@localhost:6379'
-            prod: ${ssm:/prod/redis.url, ''}
+            #prod: ${ssm:/prod/redis.url, ''}
         MONGO_DB_URL:
             dev: 'mongodb://root:root@localhost:27017/evento?authSource=admin'
-            prod: ${ssm:/prod/mongo.url, ''}
+            #prod: ${ssm:/prod/mongo.url, ''}
 
 provider:
     name: aws

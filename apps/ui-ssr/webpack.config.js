@@ -9,9 +9,11 @@ const appDir = path.resolve(outDir + '/src/app');
 
 // Setup for copying standalone hydration file.
 module.exports = [
+    config,
     {
         name: 'hydration',
         target: 'web',
+        dependencies: [config.name],
         mode: config.mode,
         devtool: 'source-map',
         resolve: {
@@ -22,6 +24,8 @@ module.exports = [
                 assert: false,
                 util: false,
                 fs: false,
+                "crypto": require.resolve("crypto-browserify"),
+                "stream": require.resolve("stream-browserify")
             },
         },
         module: {
@@ -70,8 +74,5 @@ module.exports = [
             ...config.output,
             libraryTarget: 'window',
         },
-    },
-    {
-        ...config,
-    },
+    }
 ];
