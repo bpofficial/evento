@@ -15,6 +15,11 @@ interface EventoApiConstructorParams {
     }
 }
 
+const DEVELOPMENT_SERVICES = {
+    [BillingApi.ENDPOINT]: BillingApi.DEVELOPMENT_SERVICES,
+    [PagesApi.ENDPOINT]: PagesApi.DEVELOPMENT_SERVICES
+}
+
 export class EventoApi {
     private readonly development: boolean;
     private readonly gatewayUrl: string;
@@ -32,10 +37,30 @@ export class EventoApi {
         }
     }
 
-    public async request<T = any>(config: AxiosRequestConfig<T>) {
+    private getServiceUrl(baseUrl: string, url: string, type: 'command' | 'query') {
+        if (!this.development) return baseUrl + url;
+        if (url[0] === '/') {
+            url = url.slice(1);
+        }
+        let service;
+        for (const svc in DEVELOPMENT_SERVICES) {
+            if (service) continue;
+            if (url.toLowerCase().startsWith(svc)) {
+                const idx = type === 'command' ? 0 : 1
+                service = DEVELOPMENT_SERVICES[svc][idx];
+            }
+        }
+        if (service) {
+            return baseUrl + service + url
+        }
+        return baseUrl+ url;
+    }
+
+    public async request<T = any>(config: AxiosRequestConfig<T> & { type: 'command' | 'query' }) {
         config.baseURL = this.gatewayUrl;
+
         const params = config.params ?? {};
-        const url = new URL(`${config.baseURL}/${config.url}`);
+        const url = new URL(this.getServiceUrl(config.baseURL, config.url || '', config.type));
 
         if (this.credentials) {
             const res = createSignature({

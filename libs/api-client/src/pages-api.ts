@@ -4,14 +4,22 @@ import {Either, left, right} from 'fp-ts/Either';
 import {AxiosError} from "axios";
 
 export class PagesApi {
+    static ENDPOINT = 'pages'
+    static DEVELOPMENT_SERVICES = [':4003/', ':4004/']
+
+    private id(str: string) {
+        return `${PagesApi.ENDPOINT}/${str}`;
+    }
+
     constructor(private readonly api: EventoApi) {
         // emptiness
     }
 
     public retrieve(id: string, version?: string): Promise<Either<AxiosError, PageModel>> {
         return this.api.request({
+            type: 'query',
             method: 'GET',
-            url: 'pages/' + id,
+            url: this.id(id),
             params: {
                 version: version || undefined
             }
@@ -23,18 +31,18 @@ export class PagesApi {
     }
 
     public async list(): Promise<PageModel[]> {
-        return this.api.request({method: 'GET', url: 'pages'}) as any;
+        return this.api.request({type: 'query', method: 'GET', url: PagesApi.ENDPOINT}) as any;
     }
 
     public async update(id: string, data: any): Promise<any> {
-        return this.api.request({method: 'PATCH', url: 'pages/' + id, data});
+        return this.api.request({type: 'command', method: 'PATCH', url: this.id(id), data});
     }
 
     public async create(data: any): Promise<any> {
-        return this.api.request({method: 'POST', url: 'pages', data});
+        return this.api.request({type: 'command', method: 'POST', url: PagesApi.ENDPOINT, data});
     }
 
     public async del(id: string): Promise<any> {
-        return this.api.request({method: 'DELETE', url: 'pages/' + id});
+        return this.api.request({type: 'command', method: 'DELETE', url: this.id(id)});
     }
 }
