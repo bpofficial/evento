@@ -7,7 +7,7 @@ plugins:
     - serverless-deployment-bucket
 
 package:
-    individually: false
+    individually: true
     include:
         - ../../node_modules/**
 
