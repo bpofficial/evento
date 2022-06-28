@@ -6,7 +6,7 @@ import {PokerCalculations, PokerPages} from './test-config';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const StaticFileHandler = require('serverless-aws-static-file-handler');
-const clientFilesPath = join(__dirname, '../assets/');
+const clientFilesPath = join(__dirname, './assets/');
 const fileHandler = new StaticFileHandler(clientFilesPath);
 
 export const handler = async () => {

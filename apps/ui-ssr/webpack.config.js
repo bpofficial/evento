@@ -1,19 +1,18 @@
 const config = require('../../webpack.config');
 const path = require('path');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const outDir = path.resolve(config.output.path);
-const assetsDir = path.resolve(outDir + '/src/assets');
-const appDir = path.resolve(outDir + '/src/app');
+const outDir = path.resolve(__dirname, './.webpack/service');
+
+config.output.path = outDir;
+config.plugins = []
 
 // Setup for copying standalone hydration file.
 module.exports = [
-    config,
     {
         name: 'hydration',
         target: 'web',
-        dependencies: [config.name],
         mode: config.mode,
         devtool: 'source-map',
         resolve: {
@@ -24,8 +23,8 @@ module.exports = [
                 assert: false,
                 util: false,
                 fs: false,
-                "crypto": require.resolve("crypto-browserify"),
-                "stream": require.resolve("stream-browserify")
+                crypto: require.resolve("crypto-browserify"),
+                stream: require.resolve("stream-browserify")
             },
         },
         module: {
@@ -40,39 +39,19 @@ module.exports = [
                 },
             ],
         },
+        plugins: [new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: path.resolve(__dirname, './src/app/html.template.ejs'),
+            publicPath: '/assets'
+        })],
         entry: { './src/app/hydrate': './src/app/hydrate.tsx' },
-        plugins: [
-            new FileManagerPlugin({
-                events: {
-                    onEnd: [
-                        {
-                            mkdir: [
-                                assetsDir,
-                                assetsDir + '/js',
-                                assetsDir + '/css',
-                            ],
-                        },
-                        {
-                            copy: [
-                                {
-                                    source: appDir + '/hydrate.js',
-                                    destination: assetsDir + '/js/hydrate.js',
-                                },
-                                {
-                                    source: appDir + '/hydrate.js.map',
-                                    destination:
-                                        assetsDir + '/js/hydrate.js.map',
-                                },
-                            ],
-                        },
-                    ],
-                },
-            }),
-        ],
         stats: 'minimal', // errors-only, minimal, none, normal, verbose
         output: {
             ...config.output,
+            path: path.resolve(outDir, './src/app/assets/'),
+            filename: './js/hydrate.js',
             libraryTarget: 'window',
         },
-    }
+    },
+    config,
 ];

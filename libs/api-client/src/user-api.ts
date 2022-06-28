@@ -6,22 +6,22 @@ export class UserApi {
     }
 
     public async retrieve(id: string) {
-        return this.api.request({method: 'GET', url: 'users/' + id});
+        return this.api.request({type: 'query', method: 'GET', url: 'users/' + id});
     }
 
     public async list() {
-        return this.api.request({method: 'GET', url: 'users'});
+        return this.api.request({type: 'query', method: 'GET', url: 'users'});
     }
 
     public async update(id: string, data: any) {
-        return this.api.request({method: 'PATCH', url: 'users' + id, data});
+        return this.api.request({type: 'command', method: 'PATCH', url: 'users' + id, data});
     }
 
     public async create(data: any) {
-        return this.api.request({method: 'POST', url: 'users', data});
+        return this.api.request({type: 'command', method: 'POST', url: 'users', data});
     }
 
     public async del(id: string) {
-        return this.api.request({method: 'DELETE', url: 'users/' + id});
+        return this.api.request({type: 'command', method: 'DELETE', url: 'users/' + id});
     }
 }

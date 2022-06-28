@@ -27,7 +27,7 @@ export class EventoApi {
     private readonly credentials: EventoApiConstructorParams['credentials'] | null;
 
     constructor(params: EventoApiConstructorParams) {
-        this.development = !['prod', 'production'].includes(process.env.NODE_ENV?.toLowerCase?.() ?? '');
+        this.development = !['prod', 'production'].includes(process.env['NODE_ENV']?.toLowerCase?.() ?? '');
         this.gatewayUrl = params.gatewayUrl;
         this.accessToken = params.accessToken || null;
         this.credentials = params.credentials || null;
