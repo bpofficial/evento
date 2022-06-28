@@ -9,8 +9,6 @@ export const useSubmit = (formId?: string) => {
         const api = new EventoApi({
             gatewayUrl: environment.api.baseUrl,
         })
-        if (!formId) return;
-
-        return api.billing.createPaymentIntent(formId, form.values);
+        console.log({ form: form.values })
     };
 };

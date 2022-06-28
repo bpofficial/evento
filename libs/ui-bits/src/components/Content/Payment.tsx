@@ -11,13 +11,14 @@ import {
 } from '@stripe/stripe-js';
 import { ContentFieldProps } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
-import { Box, HStack, useToast } from '@chakra-ui/react';
+import {Box, CircularProgress, HStack, useBoolean, useToast} from '@chakra-ui/react';
 import {
     getInputFormKey,
     getPaymentAmount,
     getSingleFormValue,
 } from '@evento/calculations';
-import { usePages } from '../../hooks';
+import {usePages, usePaymentIntent} from '../../hooks';
+import {useFormikContext} from "formik";
 
 const stripePromise = loadStripe(
     'pk_test_51H5lSlIHLTnuvRM7Ah4nUAVj66F8BxJRnhhRYcQcyMMUv6AjkaZSQJp0H9EvuAgqjnoS7gHHWFJxU9G3oBbc8RQm00yjqLBvfK'
@@ -212,13 +213,27 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
     );
 };
 
-export const ContentPayment = (props: PaymentProps) => {
+export const ContentPayment = (props: PaymentProps & { formId: string }) => {
     const [stripe] = useState(stripePromise);
+    const [isLoading, loading] = useBoolean(false);
+    const [clientSecret, setClientSecret] = useState<string | null>(null);
+
+    const createPaymentIntent = usePaymentIntent(props.formId);
+
+    useEffect(() => {
+        loading.on()
+        createPaymentIntent().then((result) => {
+            console.log(result)
+        }).finally(() => {
+            loading.off()
+        })
+    }, [createPaymentIntent])
+
     return (
         <Box w="100%">
-            <Elements {...{ options, stripe }}>
+            {(isLoading || !clientSecret) ? <CircularProgress isIndeterminate /> : <Elements {...{options: { clientSecret }, stripe}}>
                 <ContentPaymentComponent {...props} />
-            </Elements>
+            </Elements>}
         </Box>
     );
 };
