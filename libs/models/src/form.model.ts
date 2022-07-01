@@ -112,4 +112,11 @@ export class FormModel {
             fields
         );
     }
+
+    getAsyncValidators(): Map<string, string> {
+        return Object.entries(this.validations ?? {})
+            .filter(([_, value]) => !!value.$async)
+            .map(([key, value]) => ({ field: key, validator: value }))
+            .reduce((a, v) => a.set(v.field, v.validator) && a, new Map());
+    }
 }

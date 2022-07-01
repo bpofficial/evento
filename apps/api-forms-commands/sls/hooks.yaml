@@ -12,3 +12,9 @@ DetachHookFromForm:
                 method: DELETE
                 path: /forms/{formId}/hooks/{hookId}
 
+TriggerHook:
+    handler: ./src/hooks/trigger-hook/handler.triggerHook
+    events:
+        -   http:
+                method: POST
+                path: /forms/{formId}/hooks/trigger

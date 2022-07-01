@@ -7,7 +7,7 @@ import { formDb } from '../mongo';
 export async function retrieveForm(event: APIGatewayEvent) {
     // GET /api/v1/forms/:formId
     try {
-        const formId = event.pathParameters?.pageId;
+        const formId = event.pathParameters?.formId;
         let formVersion: string | number =
             event.queryStringParameters?.version ?? null;
 
