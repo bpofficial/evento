@@ -5,9 +5,7 @@ import { resolve } from 'path';
 import { RootComponentHelmetData } from '@evento/ui-bits';
 import { ColorModeScript } from '@chakra-ui/react';
 
-const html = readFileSync(
-    resolve(__dirname, './assets/index.html')
-).toString();
+const html = readFileSync(resolve(__dirname, './assets/index.html')).toString();
 
 export interface RenderContext<T extends ElementType> {
     props: ComponentPropsWithoutRef<T> & RootComponentHelmetData;
@@ -25,16 +23,19 @@ export const renderApplication = <T extends ElementType>(
     );
 
     return html
-        .replace(`<title>Ui</title>`, `<title>${context.props?.helmet?.title ?? 'Evento'}</title>`)
+        .replace(
+            `<title>Ui</title>`,
+            `<title>${context.props?.helmet?.title ?? 'Evento'}</title>`
+        )
         .replace(
             '<div id="root"></div>',
             `<div style="height: 100%" id="root">${markup}</div>`
         )
         .replace(
             '</head>',
-            `<script>window.__INITIAL__DATA__ = JSON.parse('${JSON.stringify(
+            `<script>window.__INITIAL__DATA__ = ${JSON.stringify(
                 context.props
-            )}');</script>
+            )};</script>
             </head>`
-        )
+        );
 };

@@ -1,7 +1,23 @@
 export const PokerCalculations = {
     payableAmount: {
         // if 'gettingPizza' === true then $5.00 else $0.00
-        $cond: [{$eq: ['$gettingPizza', true]}, 500, 0],
+        $cond: [{ $eq: ['$gettingPizza', true] }, 500, 0],
+    },
+    payableAmountDecimal: {
+        $round: [{ $divide: ['$payableAmount', 100] }, 2],
+    },
+};
+
+export const PokerValidations = {
+    name: {
+        $required: 'Name is required',
+        $minLength: [3, 'Name is too short'],
+        $maxLength: [255, 'Name is too long'],
+        $type: 'string',
+    },
+    email: {
+        $required: [true, 'Email is required'], // GET /api/v1/forms/:formId/validate?key=abc&value=xyz
+        $async: true,
     },
 };
 
@@ -59,7 +75,7 @@ export const PokerPages: any[] = [
                     type: 'ContentHeading',
                     options: {
                         value: 'Are you having pizza?',
-                        options: {size: 'md'},
+                        options: { size: 'md' },
                     },
                 },
                 {
@@ -93,8 +109,8 @@ export const PokerPages: any[] = [
         type: 'CustomContent',
         options: {
             primaryButton: {
-                text: "Pay Now",
-                hideIcon: true
+                text: 'Pay Now',
+                hideIcon: true,
             },
             skipPageCondition: {
                 $not: ['$payableAmount'],
@@ -116,14 +132,30 @@ export const PokerPages: any[] = [
                     },
                 },
                 {
+                    type: 'ContentText',
+                    options: {
+                        value: `You're paying **\${{payableAmountDecimal}} AUD**`,
+                    },
+                },
+                {
+                    type: 'ContentSpacing',
+                    options: {
+                        height: '10px',
+                    },
+                },
+                {
                     type: 'ContentPayment',
                     options: {
                         label: 'buy-in',
-                        amount: '{{payableAmount}}',
+                        amount: '{{payableAmount}}', // important
                         nameFieldKey: 'name',
+                        metadata: {
+                            formId: '{{__FORM_ID__}}',
+                            name: '{{name}}',
+                        },
                         options: {
-                            isRequired: true
-                        }
+                            isRequired: true,
+                        },
                     },
                 },
             ],
@@ -134,10 +166,10 @@ export const PokerPages: any[] = [
         options: {
             submitOnLoad: true,
             backButton: {
-                hide: true
+                hide: true,
             },
             primaryButton: {
-                hide: true
+                hide: true,
             },
             content: [
                 {

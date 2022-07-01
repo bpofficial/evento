@@ -18,7 +18,7 @@ export function getFormValue(
     formKey: string,
     formValues: FormValues
 ): FieldValue | FieldValue[] {
-    const parts = formKey.split('.');
+    const parts = formKey?.split?.('.');
     let value = formValues;
     for (const part of parts) {
         value = value?.[part];

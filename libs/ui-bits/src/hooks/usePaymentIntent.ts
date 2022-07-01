@@ -1,17 +1,31 @@
-import {useFormikContext} from 'formik';
-import {useEnvironment} from './useEnvironment';
-import {EventoApi} from '@evento/api-client';
-import {useCallback} from "react";
+import { useCallback } from 'react';
+import { useEnvironment } from './useEnvironment';
+import { EventoApi } from '@evento/api-client';
+import { isLeft } from 'fp-ts/lib/Either';
+import { usePages } from '.';
 
-export const usePaymentIntent = (formId?: string) => {
+export const usePaymentIntent = () => {
     const environment = useEnvironment();
-    const form = useFormikContext<any>();
+    const { formId, version } = usePages();
 
-    return useCallback(async () => {
-        const api = new EventoApi({
-            gatewayUrl: environment.api.baseUrl,
-        })
-        if (!formId) return;
-        return api.billing.createPaymentIntent(formId, form.values);
-    }, [environment.api.baseUrl, form.values, formId]);
+    return useCallback(
+        async (values: any, metadata?: Record<string, string>) => {
+            const api = new EventoApi({
+                gatewayUrl: environment.api.baseUrl,
+            });
+            if (!formId) return;
+            const result = await api.billing.createPaymentIntent(
+                formId,
+                values,
+                metadata,
+                version
+            );
+            if (isLeft(result)) {
+                console.error(result.left);
+                return null;
+            }
+            return result.right;
+        },
+        [environment.api.baseUrl, formId, version]
+    );
 };

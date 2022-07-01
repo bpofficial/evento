@@ -1,5 +1,5 @@
-import {FormValues, getSingleFormValue} from "./FormUtils";
-import {MapAndCalculate} from "./MapAndCalculate";
+import { FormValues, getSingleFormValue } from './FormUtils';
+import { MapAndCalculate } from './MapAndCalculate';
 
 export function calculateField(
     logic: any,
@@ -19,5 +19,5 @@ export function calculateField(
         }
         values.set(key, value);
     }
-    return new MapAndCalculate(values).interpret({...logic});
+    return new MapAndCalculate(values).interpret({ ...logic });
 }

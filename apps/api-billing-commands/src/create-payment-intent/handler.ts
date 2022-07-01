@@ -1,15 +1,13 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import { formatError, formatResponse } from '@evento/api-utils';
 import Stripe from 'stripe';
-import { PageModel } from '@evento/models';
+import { FormModel } from '@evento/models';
 import { TestConfig } from './test-config';
+import { config } from '../../config';
 
-const stripe = new Stripe(
-    'sk_test_51H5lSlIHLTnuvRM7IUHjny0aZtV6WXsqrI9X4PkdfeDwMhN6o3Nc9TaZpOvtwFHZYM9Of4wPMSoNq8hQH7VBFzXZ00iE3Gvmnk',
-    {
-        apiVersion: '2020-08-27',
-    }
-);
+const stripe = new Stripe(config.stripe.apiKey, {
+    apiVersion: '2020-08-27',
+});
 
 /**
  * The client will send the current form values & a payment form field key,
@@ -18,16 +16,16 @@ const stripe = new Stripe(
  */
 export async function handler(event: APIGatewayEvent) {
     // POST /api/v1/billing/checkout?formId=xyz&formVersion=1
-    const pageId = event.queryStringParameters?.formId;
-    const pageVersion = event.queryStringParameters?.formVersion ?? null; // used to ensure the correct version of a form is used for billing.
+    const formId = event.queryStringParameters?.formId;
+    const formVersion = event.queryStringParameters?.formVersion ?? null; // used to ensure the correct version of a form is used for billing.
 
-    if (!pageId) {
+    if (!formId) {
         return formatError(
             'Bad Request',
             `Expected missing field 'formId' of type string.`
         );
     }
-    if (!pageVersion) {
+    if (!formVersion) {
         return formatError(
             'Bad Request',
             `Expected missing field 'formVersion' of type string.`
@@ -37,14 +35,15 @@ export async function handler(event: APIGatewayEvent) {
     // const api = new EventoApi({
     //     gatewayUrl: config.api.baseUrl
     // })
-    // const result = await api.pages.retrieve(pageId, pageVersion);
+    // const result = await api.forms.retrieve(pageId, pageVersion);
     // if (isLeft(result)) {
     //     return formatError('Internal Server Error', result.left.message, 500);
     // }
     // const pageConfig = result.right;
-    const pageConfig = new PageModel({
+    const formConfig = new FormModel({
         pages: TestConfig.Pages,
         calculations: TestConfig.Calculations,
+        validations: TestConfig.Validations,
     });
 
     let fields: Record<string, any>, metadata: Record<string, string>;
@@ -63,7 +62,7 @@ export async function handler(event: APIGatewayEvent) {
         return formatError('Bad Request', error.message, 400);
     }
 
-    const amount = pageConfig.getPaymentAmount(fields);
+    const amount = formConfig.getPaymentAmount(fields);
     if (!amount) {
         return formatError(
             'Bad Request',

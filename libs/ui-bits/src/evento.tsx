@@ -6,13 +6,13 @@ import {
     IEnvironmentContext,
     useCustomTheme,
 } from './hooks';
-import { PageModel } from '@evento/models';
+import { FormModel } from '@evento/models';
 import { RootComponentHelmetData } from './types';
 
 export interface AppProps {
     configuration: Pick<
-        PageModel,
-        'formId' | 'calculations' | 'meta' | 'pages'
+        FormModel,
+        'formId' | 'calculations' | 'meta' | 'pages' | 'version'
     >;
     environment: IEnvironmentContext;
 }

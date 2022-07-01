@@ -17,7 +17,7 @@ export interface PagesProviderProps {
 }
 
 export const PagesProvider = ({ configuration }: PagesProviderProps) => {
-    const { formId, pages, calculations } = configuration ?? {};
+    const { formId, version, pages, calculations } = configuration ?? {};
     const submitFn = useSubmit(formId);
     const inputs = registerInputs(pages, calculations);
     const info = { inputs, calculations };
@@ -33,6 +33,8 @@ export const PagesProvider = ({ configuration }: PagesProviderProps) => {
         pages,
         pageState,
         submitFn,
+        formId,
+        version,
     } as any;
 
     const { Component, transitioning } = pageState ?? {};

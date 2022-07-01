@@ -1,9 +1,11 @@
 const Calculations = {
     payableAmount: {
         // if 'gettingPizza' === true then $5.00 else $0.00
-        $cond: [{$eq: ['$gettingPizza', true]}, 500, 0],
+        $cond: [{ $eq: ['$gettingPizza', true] }, 500, 0],
     },
 };
+
+const Validations = {};
 
 const Pages = [
     {
@@ -59,7 +61,7 @@ const Pages = [
                     type: 'ContentHeading',
                     options: {
                         value: 'Are you having pizza?',
-                        options: {size: 'md'},
+                        options: { size: 'md' },
                     },
                 },
                 {
@@ -93,8 +95,8 @@ const Pages = [
         type: 'CustomContent',
         options: {
             primaryButton: {
-                text: "Pay Now",
-                hideIcon: true
+                text: 'Pay Now',
+                hideIcon: true,
             },
             skipPageCondition: {
                 $not: ['$payableAmount'],
@@ -122,8 +124,8 @@ const Pages = [
                         amount: '{{payableAmount}}',
                         nameFieldKey: 'name',
                         options: {
-                            isRequired: true
-                        }
+                            isRequired: true,
+                        },
                     },
                 },
             ],
@@ -134,10 +136,10 @@ const Pages = [
         options: {
             submitOnLoad: true,
             backButton: {
-                hide: true
+                hide: true,
             },
             primaryButton: {
-                hide: true
+                hide: true,
             },
             content: [
                 {
@@ -161,9 +163,10 @@ const Pages = [
             ],
         },
     },
-]
+];
 
 export const TestConfig = {
     Pages,
-    Calculations
-}
+    Calculations,
+    Validations,
+};

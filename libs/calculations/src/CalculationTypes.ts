@@ -39,4 +39,24 @@ export namespace CalculationTypes {
     export interface Not {
         $not: [any];
     }
+
+    export interface Includes {
+        $includes: [any, any];
+    }
+
+    export interface Round {
+        $round: [any, any];
+    }
+
+    export interface Multiply {
+        $multiply: [any, any];
+    }
+
+    export interface Divide {
+        $divide: [any, any];
+    }
+
+    export interface Literal {
+        $literal: any;
+    }
 }

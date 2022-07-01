@@ -1,2 +1,2 @@
 export * from './lib';
-export * from './mongo'
+export * from './mongo/connection';

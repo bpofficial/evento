@@ -1,3 +1,5 @@
+import {WithId} from "mongodb";
+
 export class EntryModel {
     _id?: string;
     formId?: string;
@@ -11,7 +13,7 @@ export class EntryModel {
 
     toJSON() {
         return {
-            entryId: this._id,
+            id: this._id,
             formId: this.formId,
             fields: this.fields
         }
@@ -19,5 +21,9 @@ export class EntryModel {
 
     static toJSON(obj: Partial<EntryModel>) {
         return new EntryModel(obj).toJSON()
+    }
+
+    static fromModel(obj: WithId<EntryModel>) {
+        return new EntryModel(obj);
     }
 }

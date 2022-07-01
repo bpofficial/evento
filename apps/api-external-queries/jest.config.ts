@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-    displayName: 'api-pages-commands',
+    displayName: 'api-forms-queries',
     preset: '../../jest.preset.js',
     globals: {
         'ts-jest': {
@@ -12,5 +12,5 @@ export default {
         '^.+\\.[tj]s$': 'ts-jest',
     },
     moduleFileExtensions: ['ts', 'js', 'html'],
-    coverageDirectory: '../../coverage/apps/api-pages-commands',
+    coverageDirectory: '../../coverage/apps/api-forms-queries',
 };

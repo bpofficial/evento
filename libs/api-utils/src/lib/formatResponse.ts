@@ -1,4 +1,4 @@
-import {APIGatewayEvent} from 'aws-lambda';
+import { APIGatewayEvent } from 'aws-lambda';
 
 interface Response {
     statusCode: number;
@@ -27,7 +27,7 @@ export function formatResponse<T extends Array<unknown>>(
 ): (statusCode: number) => Response;
 export function formatResponse(...args: unknown[]) {
     if (!args.length) {
-        return ({statusCode}) => ({
+        return ({ statusCode }) => ({
             statusCode,
         });
     }
@@ -37,11 +37,10 @@ export function formatResponse(...args: unknown[]) {
         return (statusCode: number) => ({
             statusCode,
             body: JSON.stringify({
-                object: 'list',
                 url:
                     args.length > 1
                         ? event.path +
-                        joinQueryStringParams(event.queryStringParameters)
+                          joinQueryStringParams(event.queryStringParameters)
                         : null,
                 hasMore: args.length > 2 ? args[2] : false,
                 data: arg1,

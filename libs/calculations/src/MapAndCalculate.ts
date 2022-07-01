@@ -1,4 +1,5 @@
-import {CalculationTypes} from "./CalculationTypes";
+import { timeStamp } from 'console';
+import { CalculationTypes } from './CalculationTypes';
 
 export class MapAndCalculate {
     constructor(
@@ -18,7 +19,7 @@ export class MapAndCalculate {
                 if (key[0] === '$') {
                     // is an operation
                     return this.interpret(
-                        this.call(key, {[key]: value[key]})
+                        this.call(key, { [key]: value[key] })
                     );
                 }
             }
@@ -57,6 +58,16 @@ export class MapAndCalculate {
                 return this.$and(params);
             case '$not':
                 return this.$not(params);
+            case '$includes':
+                return this.$includes(params);
+            case '$round':
+                return this.$round(params);
+            case '$divide':
+                return this.$divide(params);
+            case '$multiple':
+                return this.multiply(params);
+            case '$literal':
+                return this.$literal(params);
         }
     }
 
@@ -102,5 +113,54 @@ export class MapAndCalculate {
 
     private $not(obj: CalculationTypes.Not) {
         return !this.interpret(obj.$not[0]);
+    }
+
+    private $includes(obj: CalculationTypes.Includes) {
+        const result = this.interpret(obj.$includes[0]);
+        if (typeof result === 'string' || result instanceof Array) {
+            const search = this.interpret(obj.$includes[1]);
+            return result.includes(search);
+        }
+        return false;
+    }
+
+    private resolveNumbers(first: number, second: number) {
+        const [resolved1, resolved2] = [
+            this.interpret(first),
+            this.interpret(second),
+        ];
+        if (Number.isNaN(resolved1) || Number.isNaN(resolved2)) {
+            return null;
+        }
+        return [resolved1, resolved2];
+    }
+
+    private $round(obj: CalculationTypes.Round) {
+        const resolved = this.resolveNumbers(obj.$round[0], obj.$round[1]);
+        if (!resolved) return resolved; // null
+        const places = Math.floor(resolved[1]);
+        return +(
+            Math.round((resolved[0] + `e+${places}`) as unknown as number) +
+            `e-${places}`
+        );
+    }
+
+    private multiply(obj: CalculationTypes.Multiply) {
+        const resolved = this.resolveNumbers(
+            obj.$multiply[0],
+            obj.$multiply[1]
+        );
+        if (!resolved) return resolved; // null
+        return resolved[0] * resolved[1];
+    }
+
+    private $divide(obj: CalculationTypes.Divide) {
+        const resolved = this.resolveNumbers(obj.$divide[0], obj.$divide[1]);
+        if (!resolved) return resolved; // null
+        return resolved[0] / resolved[1];
+    }
+
+    private $literal(obj: CalculationTypes.Literal) {
+        return obj.$literal;
     }
 }

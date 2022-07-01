@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const outDir = path.resolve(__dirname, './.webpack/service');
 
 config.output.path = outDir;
-config.plugins = []
+config.plugins = [];
 
 // Setup for copying standalone hydration file.
 module.exports = [
@@ -23,8 +23,8 @@ module.exports = [
                 assert: false,
                 util: false,
                 fs: false,
-                crypto: require.resolve("crypto-browserify"),
-                stream: require.resolve("stream-browserify")
+                crypto: require.resolve('crypto-browserify'),
+                stream: require.resolve('stream-browserify'),
             },
         },
         module: {
@@ -39,11 +39,16 @@ module.exports = [
                 },
             ],
         },
-        plugins: [new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: path.resolve(__dirname, './src/app/html.template.ejs'),
-            publicPath: '/assets'
-        })],
+        plugins: [
+            new HtmlWebpackPlugin({
+                filename: 'index.html',
+                template: path.resolve(
+                    __dirname,
+                    './src/app/html.template.ejs'
+                ),
+                publicPath: '/assets',
+            }),
+        ],
         entry: { './src/app/hydrate': './src/app/hydrate.tsx' },
         stats: 'minimal', // errors-only, minimal, none, normal, verbose
         output: {

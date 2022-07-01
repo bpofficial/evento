@@ -3,6 +3,8 @@ import { getLinksFromText } from '@evento/utils';
 import { useReplaceInputValue } from '../../hooks/useReplaceInputValue';
 import { ContentItem, PageForm } from '../../types';
 import { ContentLink } from './Link';
+import { Markup } from 'interweave';
+import snarkdown from 'snarkdown';
 
 interface ContentTextProps extends PageForm {
     value: string;
@@ -31,19 +33,20 @@ function splitTextAtLinks(str: string, links: Map<string, RegExpMatchArray>) {
     return result;
 }
 
-export const ContentText = ({ value, options, form }: ContentTextProps) => {
+export const ContentText = ({ value, options }: ContentTextProps) => {
     const replaced = useReplaceInputValue(value);
-    const [str, links] = getLinksFromText(replaced);
+    const html = snarkdown(replaced);
+    const [str, links] = getLinksFromText(html);
     const contentArr = splitTextAtLinks(str, links);
 
     return (
         <Text w="100%" {...options}>
-            {contentArr.map((c, key) => {
-                switch (typeof c) {
+            {contentArr.map((content, key) => {
+                switch (typeof content) {
                     case 'string':
-                        return c;
+                        return <Markup {...{ content }} />;
                     case 'object':
-                        return <ContentLink {...{ key, ...c.options }} />;
+                        return <ContentLink {...{ key, ...content.options }} />;
                     default:
                         return null;
                 }

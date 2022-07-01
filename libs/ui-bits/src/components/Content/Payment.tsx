@@ -4,54 +4,41 @@ import {
     useElements,
     useStripe,
 } from '@stripe/react-stripe-js';
-import {
-    loadStripe,
-    PaymentRequest,
-    StripeElementsOptions,
-} from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { ContentFieldProps } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
-import {Box, CircularProgress, HStack, useBoolean, useToast} from '@chakra-ui/react';
+import { Box, CircularProgress, useBoolean, useToast } from '@chakra-ui/react';
 import {
     getInputFormKey,
-    getPaymentAmount,
     getSingleFormValue,
+    replaceTextWithInputValue,
 } from '@evento/calculations';
-import {usePages, usePaymentIntent} from '../../hooks';
-import {useFormikContext} from "formik";
+import { usePages, usePaymentIntent } from '../../hooks';
+import { useFormikContext } from 'formik';
+import { FormModel } from '@evento/models';
 
 const stripePromise = loadStripe(
     'pk_test_51H5lSlIHLTnuvRM7Ah4nUAVj66F8BxJRnhhRYcQcyMMUv6AjkaZSQJp0H9EvuAgqjnoS7gHHWFJxU9G3oBbc8RQm00yjqLBvfK'
 );
-const options: StripeElementsOptions = {
-    // passing the client secret obtained from the server
-    // deepcode ignore HardcodedNonCryptoSecret: Dev
-    clientSecret:
-        'pi_3LCy8TIHLTnuvRM704Be1RLx_secret_E7pe2S5Ve1nC2zqnY5cu15N9x',
-};
 
 interface PaymentProps extends Omit<ContentFieldProps, 'fieldKey'> {
     nameFieldKey: string;
-    amount: number | string;
+    amount: string | number;
     label: string;
+    metadata?: Record<string, string>;
 }
 
 export const ContentPaymentComponent = (props: PaymentProps) => {
     const pages = usePages();
 
-    const { amount, label, form, nameFieldKey } = props;
-    const { inputs, calculations, pageState } = pages;
+    const { form, nameFieldKey } = props;
+    const { inputs, pageState } = pages;
 
     const [name, setName] = useState<string | null>(null);
     const key = getInputFormKey('payment', pageState?.state?.currentIndex);
     const stripe = useStripe();
     const elements = useElements();
     const toast = useToast();
-
-    const [value, setValue] = useState<number>(0);
-    const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(
-        null
-    );
 
     const onSubmit = useCallback(async () => {
         if (!stripe || !elements) {
@@ -99,6 +86,11 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
             elements: elements,
             confirmParams: {
                 return_url: '',
+                payment_method_data: {
+                    billing_details: {
+                        name,
+                    },
+                },
             },
             redirect: 'if_required',
         });
@@ -129,41 +121,6 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
     }, [stripe, elements, name, toast, form, key]);
 
     useEffect(() => {
-        const value = getPaymentAmount(
-            amount,
-            inputs,
-            calculations,
-            form.values
-        );
-        if (value) {
-            setValue(value);
-        } else {
-            console.error(
-                "Couldn't calculate the value of `amount` provided to `ContentPayment`.",
-                { provided: amount, calculated: value }
-            );
-        }
-    }, [amount, calculations, form, inputs]);
-
-    useEffect(() => {
-        if (stripe) {
-            const pr = stripe.paymentRequest({
-                country: 'AU',
-                currency: 'aud',
-                total: {
-                    label,
-                    amount: value,
-                },
-            });
-
-            // Check the availability of the Payment Request API.
-            pr.canMakePayment()
-                .then((result) => result && setPaymentRequest(pr))
-                .catch(console.warn);
-        }
-    }, [amount, label, stripe, value]);
-
-    useEffect(() => {
         const nameFullKey = inputs.get(nameFieldKey);
         if (!nameFullKey) return;
         const value = getSingleFormValue(nameFullKey, form.values)?.value;
@@ -183,6 +140,7 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
                 });
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stripe, elements]);
 
     const handleChange = (complete: boolean) => {
@@ -197,43 +155,75 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
         }
     };
 
-    return (
-        <>
-            <HStack spacing={1} mb="8">
-                <Box>You're paying</Box>
-                <Box fontWeight={'800'}>${(value / 100).toFixed(2)} AUD</Box>
-                {/* <Button variant="link">change</Button> */}
-            </HStack>
-            {stripe && elements ? (
-                <PaymentElement
-                    onChange={(evt) => handleChange(evt.complete)}
-                />
-            ) : null}
-        </>
-    );
+    if (!(stripe && elements)) return null;
+    return <PaymentElement onChange={(evt) => handleChange(evt.complete)} />;
 };
 
-export const ContentPayment = (props: PaymentProps & { formId: string }) => {
+export const ContentPayment = (props: PaymentProps) => {
     const [stripe] = useState(stripePromise);
     const [isLoading, loading] = useBoolean(false);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
 
-    const createPaymentIntent = usePaymentIntent(props.formId);
+    const pages = usePages();
+    const form = useFormikContext<any>();
+    const createPaymentIntent = usePaymentIntent();
+
+    const { inputs, calculations } = pages;
+
+    const model = new FormModel({
+        formId: pages.formId,
+        version: pages.version,
+        pages: pages.pages,
+        calculations,
+    });
+
+    const setupMetadata = () => {
+        if (props.metadata) {
+            const meta = props.metadata;
+            for (const metaName in meta) {
+                const key = meta[metaName];
+                if (key[0] === '{') {
+                    const value = replaceTextWithInputValue(
+                        key,
+                        inputs,
+                        model?.calculations ?? {},
+                        form.values
+                    );
+                    if (value) meta[metaName] = value;
+                }
+            }
+            return meta;
+        }
+        return {};
+    };
 
     useEffect(() => {
-        loading.on()
-        createPaymentIntent().then((result) => {
-            console.log(result)
-        }).finally(() => {
-            loading.off()
-        })
-    }, [createPaymentIntent])
+        if (form.values) {
+            const metadata = setupMetadata();
+            loading.on();
+            console.log({ metadata });
+            createPaymentIntent(form.values, metadata)
+                .then((result) => {
+                    if (result.clientSecret) {
+                        setClientSecret(result.clientSecret);
+                    }
+                })
+                .finally(() => {
+                    loading.off();
+                });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Box w="100%">
-            {(isLoading || !clientSecret) ? <CircularProgress isIndeterminate /> : <Elements {...{options: { clientSecret }, stripe}}>
-                <ContentPaymentComponent {...props} />
-            </Elements>}
+            {isLoading || !clientSecret ? (
+                <CircularProgress color={'custom.500'} isIndeterminate />
+            ) : (
+                <Elements {...{ options: { clientSecret }, stripe }}>
+                    <ContentPaymentComponent {...props} />
+                </Elements>
+            )}
         </Box>
     );
 };

@@ -5,11 +5,11 @@ import {
     getMongoDBBuilder,
 } from '@evento/api-utils';
 import { config } from '../../config';
-import { PageModel } from '@evento/models';
+import { FormModel } from '@evento/models';
 import { WithId } from 'mongodb';
 
 const collections = {
-    Pages: PageModel.prototype,
+    Forms: FormModel.prototype,
 } as const;
 
 const mongodb = getMongoDBBuilder({
@@ -23,7 +23,7 @@ const mongodb = getMongoDBBuilder({
  * the stored pages for the given formId - the charge.
  */
 export async function handler(event: APIGatewayEvent) {
-    // GET /api/v1/pages/:pageId
+    // GET /api/v1/forms/:formId
     const pageId = event.pathParameters?.pageId;
     let pageVersion: string | number =
         event.queryStringParameters?.version ?? null;
@@ -42,10 +42,10 @@ export async function handler(event: APIGatewayEvent) {
         return formatError('Not Found', 'Page not found', 404);
     }
 
-    let result: WithId<PageModel>;
+    let result: WithId<FormModel>;
     try {
         const { collections } = await mongodb('');
-        result = await collections.Pages.findOne({
+        result = await collections.Forms.findOne({
             // spread will remove version if it's undefined
             ...{
                 formId: pageId,
@@ -64,7 +64,7 @@ export async function handler(event: APIGatewayEvent) {
         return formatError('Not Found', 'Page not found', 404);
     }
 
-    const page = PageModel.fromModel(result).toJSON();
+    const page = FormModel.fromModel(result).toJSON();
 
     return formatResponse(page)(200);
 }

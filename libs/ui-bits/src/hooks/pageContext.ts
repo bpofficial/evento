@@ -10,6 +10,8 @@ interface IPageContext {
     inputs: Map<string, string>;
     pageState: PageState;
     submitFn: () => Promise<AxiosResponse>;
+    formId: string;
+    version: number;
 }
 
 export const PagesContext = createContext<IPageContext>({
@@ -20,6 +22,8 @@ export const PagesContext = createContext<IPageContext>({
     submitFn: (() => {
         //
     }) as any,
+    formId: '',
+    version: 0,
 });
 
 export const usePages = () => {
