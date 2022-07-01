@@ -5,7 +5,7 @@ import { replaceTextWithInputValue } from '@evento/calculations';
 
 export function useReplaceInputValue(str: string) {
     const form = useFormikContext<any>();
-    const { inputs, calculations } = usePages();
+    const { inputs, calculations = {} } = usePages();
     const [value, setValue] = useState('');
 
     useEffect(() => {

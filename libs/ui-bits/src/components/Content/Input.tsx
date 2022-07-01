@@ -1,10 +1,16 @@
 import {
     FormControl,
+    FormErrorMessage,
     FormHelperText,
     FormLabel,
     Input,
 } from '@chakra-ui/react';
-import { getSingleFormValue } from '@evento/calculations';
+import {
+    getFormError,
+    getFormTouched,
+    getInputFormKey,
+    getSingleFormValue,
+} from '@evento/calculations';
 import { ContentFieldProps } from '../../types';
 import { HTMLInputTypeAttribute, useEffect } from 'react';
 
@@ -35,8 +41,16 @@ export const ContentInput = ({
         form.setFieldValue(key, { value });
     };
 
+    const touched = getFormTouched(key, form.touched);
+    const error = getFormError(key, form.errors);
+
+    console.log({ error, touched });
+
     return (
-        <FormControl isRequired={!!options?.isRequired}>
+        <FormControl
+            isRequired={!!options?.isRequired}
+            isInvalid={!!(touched && error)}
+        >
             <FormLabel>{label}</FormLabel>
             <Input
                 {...props}
@@ -44,7 +58,11 @@ export const ContentInput = ({
                 w="100%"
                 value={value ?? ''}
                 onChange={(evt) => onChange(evt.target.value)}
+                onBlur={() => form.setFieldTouched(key, true, false)}
             />
+            {touched && error ? (
+                <FormErrorMessage>{error}</FormErrorMessage>
+            ) : null}
             <FormHelperText>{helperText}</FormHelperText>
         </FormControl>
     );

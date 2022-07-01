@@ -2,7 +2,7 @@ import { formatError, formatResponse } from '@evento/api-utils';
 import { FormModel } from '@evento/models';
 import { APIGatewayEvent } from 'aws-lambda';
 import { ObjectId } from 'mongodb';
-import { formDb } from '../mongo';
+import { formDb } from '../../mongo';
 
 export async function updateForm(event: APIGatewayEvent) {
     // PATCH /api/v1/forms/:formId

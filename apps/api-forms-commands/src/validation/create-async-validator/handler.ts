@@ -1,16 +1,16 @@
 import { formatError, formatResponse } from '@evento/api-utils';
-import { FormModel } from '@evento/models';
+import { ValidatorModel } from '@evento/models';
 import { APIGatewayEvent } from 'aws-lambda';
 import { formDb } from '../../mongo';
 
-export async function createForm(event: APIGatewayEvent) {
-    // POST /api/v1/forms
+export async function createAsyncValidator(event: APIGatewayEvent) {
+    // POST /api/v1/validators
     try {
         const data = JSON.parse(event.body);
-        const form = FormModel.fromJSON(data);
+        const form = ValidatorModel.fromJSON(data);
 
         const db = await formDb();
-        const result = await db.collections.Forms.insertOne(form);
+        const result = await db.collections.Validators.insertOne(form);
 
         return formatResponse({ id: result.insertedId })(201);
     } catch (error) {

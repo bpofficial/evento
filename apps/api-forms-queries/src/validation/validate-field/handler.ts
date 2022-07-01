@@ -2,7 +2,7 @@ import { formatError, formatResponse } from '@evento/api-utils';
 import { FormModel, ValidatorModel } from '@evento/models';
 import { APIGatewayEvent } from 'aws-lambda';
 import { ObjectId } from 'mongodb';
-import { formDb } from '../mongo';
+import { formDb } from '../../mongo';
 
 export async function asyncFieldValidation(event: APIGatewayEvent) {
     // GET /api/v1/forms/:formId/validate?key=ABC&value=XYZ

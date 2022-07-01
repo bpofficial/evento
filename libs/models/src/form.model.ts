@@ -1,4 +1,5 @@
 import { getPaymentAmount, registerInputs } from '@evento/calculations';
+import { Form } from 'formik';
 import { ObjectId, WithId } from 'mongodb';
 
 export interface Page<T = any> {
@@ -38,6 +39,7 @@ export class FormModel {
             meta: this?.meta,
             pages: this?.pages,
             calculations: this?.calculations,
+            validations: this?.validations,
             version: this?.version,
         };
     }
@@ -55,6 +57,10 @@ export class FormModel {
             calculations: obj?.['calculations'],
             version: obj?.['version'],
         });
+    }
+
+    static fromJSONArray(objs: Record<string, any>[]) {
+        return objs.map((o) => FormModel.fromJSON(o));
     }
 
     static fromModel(obj: WithId<FormModel>) {

@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { ObjectId, WithId } from 'mongodb';
+import { WithId } from 'mongodb';
 
 export class ValidatorModel {
-    _id: ObjectId;
+    _id: string;
 
     url: string;
     name: string;
     method: 'GET' | 'POST';
 
     constructor(params: Partial<ValidatorModel> = {}) {
-        this._id = params._id || new ObjectId();
+        this._id = params._id || '';
         this.url = params.url || '';
         this.method = params.method || 'GET';
         this.name = params.name || '';
@@ -28,6 +28,17 @@ export class ValidatorModel {
         return new ValidatorModel(obj).toJSON();
     }
 
+    static fromJSON(obj: Record<string, string>) {
+        return new ValidatorModel({
+            _id: obj?.['_id'],
+            url: obj?.['url'],
+            method: ['GET', 'POST'].includes(obj?.['method'])
+                ? (obj['method'] as 'GET' | 'POST')
+                : 'GET',
+            name: obj?.['name'],
+        });
+    }
+
     static fromModel(obj: WithId<ValidatorModel>) {
         return new ValidatorModel(obj);
     }
@@ -36,7 +47,7 @@ export class ValidatorModel {
         try {
             const url = new URL(this.url);
             const method: 'get' | 'post' = this.method.toLowerCase() as any;
-            let data: Record<string, string | number> | null = null;
+            let data: Record<string, string | number> = {};
             if (this.method === 'GET') {
                 url.searchParams.set('key', key);
                 url.searchParams.set('value', value.toString());

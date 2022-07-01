@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as createSignature from 'oauth1-signature';
-import { PagesApi } from './pages-api';
+import { FormsApi } from './forms-api';
 import { UserApi } from './user-api';
 import { BillingApi } from './billing-api';
 
@@ -17,7 +17,7 @@ interface EventoApiConstructorParams {
 
 const DEVELOPMENT_SERVICES = {
     [BillingApi.ENDPOINT]: BillingApi.DEVELOPMENT_SERVICES,
-    [PagesApi.ENDPOINT]: PagesApi.DEVELOPMENT_SERVICES,
+    [FormsApi.ENDPOINT]: FormsApi.DEVELOPMENT_SERVICES,
 };
 
 export class EventoApi {
@@ -96,8 +96,8 @@ export class EventoApi {
         return axios.request(config);
     }
 
-    get pages() {
-        return new PagesApi(this);
+    get forms() {
+        return new FormsApi(this);
     }
 
     get users() {

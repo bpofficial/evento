@@ -12,7 +12,7 @@ import { RootComponentHelmetData } from './types';
 export interface AppProps {
     configuration: Pick<
         FormModel,
-        'formId' | 'calculations' | 'meta' | 'pages' | 'version'
+        'formId' | 'calculations' | 'meta' | 'pages' | 'version' | 'validations'
     >;
     environment: IEnvironmentContext;
 }

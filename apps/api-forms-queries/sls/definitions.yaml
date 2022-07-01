@@ -13,7 +13,7 @@ ListForms:
                 path: /forms
 
 AsyncFieldValidation:
-    handler: ./src/validate-field/handler.asyncFieldValidation
+    handler: ./src/validation/validate-field/handler.asyncFieldValidation
     events:
         -   http:
                 method: GET

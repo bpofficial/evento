@@ -17,10 +17,12 @@ export interface PagesProviderProps {
 }
 
 export const PagesProvider = ({ configuration }: PagesProviderProps) => {
-    const { formId, version, pages, calculations } = configuration ?? {};
+    console.log({ configuration });
+    const { formId, version, pages, calculations, validations } =
+        configuration ?? {};
     const submitFn = useSubmit(formId);
     const inputs = registerInputs(pages, calculations);
-    const info = { inputs, calculations };
+    const info = { inputs, calculations, validations };
 
     const form = useFormikContext();
     const pageState = usePagesState(pages, info);

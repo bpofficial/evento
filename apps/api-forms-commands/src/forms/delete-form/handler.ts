@@ -1,7 +1,7 @@
 import { formatError, formatResponse } from '@evento/api-utils';
 import { APIGatewayEvent } from 'aws-lambda';
 import { ObjectId } from 'mongodb';
-import { formDb } from '../mongo';
+import { formDb } from '../../mongo';
 
 export async function deleteForm(event: APIGatewayEvent) {
     // DELETE /api/v1/forms/:formId

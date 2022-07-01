@@ -26,6 +26,27 @@ export function getFormValue(
     return value;
 }
 
+export function getFormTouched(
+    formKey: string,
+    formTouched: FormValues
+): boolean {
+    const parts = formKey?.split?.('.');
+    let value = formTouched;
+    for (const part of parts) {
+        value = value?.[part];
+    }
+    return value as unknown as boolean;
+}
+
+export function getFormError(formKey: string, formErrors: FormValues): string {
+    const parts = formKey?.split?.('.');
+    let value = formErrors;
+    for (const part of parts) {
+        value = value?.[part];
+    }
+    return value as unknown as string;
+}
+
 export function getInputFormKey(key: string, sourcePage?: number) {
     if (!(typeof sourcePage === 'number')) return null;
     return `${sourcePage}_CustomContent.${key}`;
