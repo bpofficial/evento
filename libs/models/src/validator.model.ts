@@ -36,7 +36,7 @@ export class ValidatorModel {
         try {
             const url = new URL(this.url);
             const method: 'get' | 'post' = this.method.toLowerCase() as any;
-            let data: Record<string, string | number>;
+            let data: Record<string, string | number> | null = null;
             if (this.method === 'GET') {
                 url.searchParams.set('key', key);
                 url.searchParams.set('value', value.toString());
@@ -54,7 +54,11 @@ export class ValidatorModel {
                 };
             }
         } catch (error) {
-            return { success: false, message: error?.message, code: 500 };
+            return {
+                success: false,
+                message: (error as any)?.message,
+                code: 500,
+            };
         }
     }
 }
