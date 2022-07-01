@@ -1,0 +1,20 @@
+CreateForm:
+    handler: ./src/forms/create-form/handler.createForm
+    events:
+        -   http:
+                method: POST
+                path: /forms/{formId}
+
+UpdateForm:
+    handler: ./src/forms/update-form/handler.updateForm
+    events:
+        -   http:
+                method: PATCH
+                path: /forms/{formId}
+
+DeleteForm:
+    handler: ./src/forms/delete-form/handler.deleteForm
+    events:
+        -   http:
+                method: DELETE
+                path: /forms/{formId}

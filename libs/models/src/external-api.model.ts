@@ -1,27 +1,27 @@
-import {WithId} from "mongodb";
+import { ObjectId, WithId } from 'mongodb';
 
 export class ExternalApiModel {
-    _id: string;
+    _id: ObjectId;
 
     url: string;
     name: string;
     authentication: {
-        type: 'oauth1' | 'basic' | 'token' | 'apikey'
-        credentials: {
+        type: 'oauth1' | 'basic' | 'token' | 'apikey' | 'none';
+        credentials?: {
             token?: string;
             apiKey?: string;
             username?: string;
             password?: string;
             consumerKey?: string;
             consumerSecret?: string;
-        }
-    }
+        };
+    };
 
     constructor(params: Partial<ExternalApiModel> = {}) {
-        this._id = params._id;
-        this.url = params.url;
-        this.name = params.name;
-        this.authentication = params.authentication;
+        this._id = params._id || new ObjectId();
+        this.url = params.url || '';
+        this.name = params.name || '';
+        this.authentication = params.authentication ?? { type: 'none' };
     }
 
     toJSON(withCredentials = false) {
@@ -30,14 +30,16 @@ export class ExternalApiModel {
             url: this.url,
             name: this.name,
             authentication: {
-                ...(this.authentication),
-                credentials: withCredentials ? this.authentication?.credentials || {} : undefined
-            }
-        }
+                ...this.authentication,
+                credentials: withCredentials
+                    ? this.authentication?.credentials || {}
+                    : undefined,
+            },
+        };
     }
 
     static toJSON(obj: Partial<ExternalApiModel>, withCredentials = false) {
-        return new ExternalApiModel(obj).toJSON(withCredentials)
+        return new ExternalApiModel(obj).toJSON(withCredentials);
     }
 
     static fromModel(obj: WithId<ExternalApiModel>) {

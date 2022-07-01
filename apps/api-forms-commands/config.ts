@@ -6,4 +6,3 @@ export const config = {
         url: process.env.MONGO_DB_URL,
     },
 };
-

@@ -11,15 +11,16 @@ export type EventType = FormEventType;
 export class HookModel {
     _id: string;
 
+    formId: string;
     url: string;
     name: string;
     types: EventType[];
 
     constructor(params: Partial<HookModel> = {}) {
-        this._id = params._id;
-        this.url = params.url;
-        this.name = params.name;
-        this.types = params.types;
+        this._id = params._id || '';
+        this.url = params.url || '';
+        this.name = params.name || '';
+        this.types = params.types || [];
     }
 
     toJSON() {
@@ -50,9 +51,12 @@ export class HookModel {
     // eslint-disable-next-line @typescript-eslint/ban-types
     static fromJSON(obj: Record<string, any>) {
         return new HookModel({
-            url: obj?.url,
-            name: obj?.name,
-            types: obj?.types && obj.types instanceof Array ? obj.types : [],
+            url: obj?.['url'],
+            name: obj?.['name'],
+            types:
+                obj?.['types'] && obj['types'] instanceof Array
+                    ? obj['types']
+                    : [],
         });
     }
 }

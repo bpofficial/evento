@@ -46,6 +46,17 @@ export class FormModel {
         return new FormModel(obj).toJSON();
     }
 
+    static fromJSON(obj: Record<string, any>) {
+        return new FormModel({
+            _id: obj?.['_id'],
+            formId: obj?.['formId'],
+            meta: obj?.['meta'],
+            pages: obj?.['pages'],
+            calculations: obj?.['calculations'],
+            version: obj?.['version'],
+        });
+    }
+
     static fromModel(obj: WithId<FormModel>) {
         return new FormModel(obj);
     }

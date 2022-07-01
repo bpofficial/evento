@@ -1,0 +1,14 @@
+AttachHookToForm:
+    handler: ./src/hooks/attach-hook/handler.attachHook
+    events:
+        -   http:
+                method: POST
+                path: /forms/{formId}/hooks
+
+DetachHookFromForm:
+    handler: ./src/hooks/detach-hook/handler.detachHook
+    events:
+        -   http:
+                method: DELETE
+                path: /forms/{formId}/hooks/{hookId}
+

@@ -56,4 +56,5 @@ provider:
         MONGO_DB_URL: ${self:custom.environment.MONGO_DB_URL.${self:custom.stage}}
 
 functions:
-    - ${file(./sls/definitions.yaml)}
+    - ${file(./sls/forms.yaml)}
+    - ${file(./sls/hooks.yaml)}
