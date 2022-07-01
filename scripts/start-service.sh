@@ -1,8 +1,10 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 APP="$1"
 OPT="$2"
-BASE_PATH=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+BASE_PATH=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../ && pwd)
+echo "$BASE_PATH"
+
 SERVICE_PATH="$BASE_PATH/apps/$APP"
 LOGS_PATH="$BASE_PATH/logs/$APP"
 

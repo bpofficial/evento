@@ -1,6 +1,13 @@
-RetrievePageConfig:
-    handler: ./src/retrieve-config/handler.handler
+RetrieveHook:
+    handler: ./src/retrieve-hook/handler.retrieveHook
     events:
         -   http:
                 method: GET
-                path: /pages/{pageId}
+                path: /hooks/{hookId}
+
+ListHooks:
+    handler: ./src/list-hooks/handler.listHooks
+    events:
+        -   http:
+                method: GET
+                path: /hooks

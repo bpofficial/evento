@@ -43,6 +43,10 @@ export class HookModel {
         return objs.map((o) => HookModel.fromModel(o));
     }
 
+    static modelsToJsonArray(objs: WithId<HookModel>[]) {
+        return HookModel.fromModels(objs).map((o) => HookModel.toJSON(o));
+    }
+
     // eslint-disable-next-line @typescript-eslint/ban-types
     static fromJSON(obj: Record<string, any>) {
         return new HookModel({

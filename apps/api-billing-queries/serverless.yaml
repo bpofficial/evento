@@ -1,7 +1,6 @@
 service: billing-queries
 
 plugins:
-    - serverless-localstack
     - serverless-webpack
     - serverless-offline
     - serverless-prune-plugin

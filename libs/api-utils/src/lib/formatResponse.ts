@@ -1,6 +1,6 @@
 import { APIGatewayEvent } from 'aws-lambda';
 
-interface Response {
+export interface Response {
     statusCode: number;
     body: string;
 }

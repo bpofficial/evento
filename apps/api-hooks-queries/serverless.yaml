@@ -19,8 +19,8 @@ custom:
         number: 2
     serverless-offline:
         noPrependStageInUrl: true
-        httpPort: 4004
-        lambdaPort: 4044
+        httpPort: 4006
+        lambdaPort: 4066
     deploymentBucketName: ${self:custom.stage}-${opt:region, self:provider.region}-serverless-deployment-bucket
     webpack:
         includeModules:

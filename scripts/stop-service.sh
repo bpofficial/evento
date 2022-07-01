@@ -18,6 +18,10 @@ PORT="$2"
     pgrep -f "$1" | xargs kill > /dev/null 2>&1
 }
 
-sudo lsof -i :"$2" -sTCP:LISTEN | awk 'NR > 1 {print $2}' | xargs kill -15
+{
+    sudo lsof -i :"$2" -sTCP:LISTEN | awk 'NR > 1 {print $2}' | xargs kill -15
+} || {
+    echo "Failed to kill via port"
+}
 
 rm $PID_FILE > /dev/null 2>&1

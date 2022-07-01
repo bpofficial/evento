@@ -2,7 +2,7 @@ import { formatError, formatResponse } from '@evento/api-utils';
 import { APIGatewayEvent } from 'aws-lambda';
 import { hookDb } from '../mongo';
 
-export async function handler(event: APIGatewayEvent) {
+export async function deleteHook(event: APIGatewayEvent) {
     try {
         const hookId = event.pathParameters.hookId || null;
         if (!hookId) {

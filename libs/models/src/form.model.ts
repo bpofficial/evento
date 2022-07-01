@@ -50,6 +50,14 @@ export class FormModel {
         return new FormModel(obj);
     }
 
+    static fromModels(objs: WithId<FormModel>[]) {
+        return objs.map((o) => FormModel.fromModel(o));
+    }
+
+    static modelsToJsonArray(objs: WithId<FormModel>[]) {
+        return FormModel.fromModels(objs).map((o) => FormModel.toJSON(o));
+    }
+
     private setDefaults() {
         this.calculations = {
             ...(this.calculations ?? {}),

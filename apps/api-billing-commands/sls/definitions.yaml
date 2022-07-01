@@ -1,5 +1,5 @@
 CreatePaymentIntent:
-    handler: ./src/create-payment-intent/handler.handler
+    handler: ./src/create-payment-intent/handler.createPaymentIntent
     events:
         -   http:
                 method: POST

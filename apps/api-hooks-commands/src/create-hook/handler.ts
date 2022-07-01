@@ -3,7 +3,7 @@ import { HookModel } from '@evento/models';
 import { APIGatewayEvent } from 'aws-lambda';
 import { hookDb } from '../mongo';
 
-export async function handler(event: APIGatewayEvent) {
+export async function createHook(event: APIGatewayEvent) {
     // POST /api/v1/hooks
 
     try {

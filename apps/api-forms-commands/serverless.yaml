@@ -1,7 +1,6 @@
 service: pages-commands
 
 plugins:
-    - serverless-localstack
     - serverless-webpack
     - serverless-offline
     - serverless-prune-plugin

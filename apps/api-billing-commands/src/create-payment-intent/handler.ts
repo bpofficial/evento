@@ -14,7 +14,7 @@ const stripe = new Stripe(config.stripe.apiKey, {
  * this function will calculate - based off of the values and
  * the stored pages for the given formId - the charge.
  */
-export async function handler(event: APIGatewayEvent) {
+export async function createPaymentIntent(event: APIGatewayEvent) {
     // POST /api/v1/billing/checkout?formId=xyz&formVersion=1
     const formId = event.queryStringParameters?.formId;
     const formVersion = event.queryStringParameters?.formVersion ?? null; // used to ensure the correct version of a form is used for billing.

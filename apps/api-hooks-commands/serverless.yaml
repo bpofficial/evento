@@ -1,7 +1,6 @@
 service: pages-commands
 
 plugins:
-    - serverless-localstack
     - serverless-webpack
     - serverless-offline
     - serverless-prune-plugin
@@ -20,8 +19,8 @@ custom:
         number: 2
     serverless-offline:
         noPrependStageInUrl: true
-        httpPort: 4003
-        lambdaPort: 4033
+        httpPort: 4005
+        lambdaPort: 4055
     deploymentBucketName: ${self:custom.stage}-${opt:region, self:provider.region}-serverless-deployment-bucket
     webpack:
         includeModules:

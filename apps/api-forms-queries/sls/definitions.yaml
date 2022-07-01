@@ -1,6 +1,13 @@
-RetrievePageConfig:
-    handler: ./src/retrieve-config/handler.handler
+RetrieveForm:
+    handler: ./src/retrieve-form/handler.retrieveForm
     events:
         -   http:
                 method: GET
-                path: /pages/{pageId}
+                path: /forms/{formId}
+
+ListForms:
+    handler: ./src/list-forms/handler.listForms
+    events:
+        -   http:
+                method: GET
+                path: /forms

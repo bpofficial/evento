@@ -1,6 +1,0 @@
-RetrievePageConfig:
-    handler: ./src/retrieve-config/handler.handler
-    events:
-        -   http:
-                method: GET
-                path: /pages/{pageId}

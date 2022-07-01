@@ -4,7 +4,7 @@ import { FormModel } from '@evento/models';
 import { WithId } from 'mongodb';
 import { formDb } from '../mongo';
 
-export async function handler(event: APIGatewayEvent) {
+export async function retrieveForm(event: APIGatewayEvent) {
     // GET /api/v1/forms/:formId
     const formId = event.pathParameters?.pageId;
     let formVersion: string | number =
