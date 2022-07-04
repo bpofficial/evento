@@ -5,12 +5,16 @@ import useSSR from 'use-ssr';
 import { usePages } from '.';
 import { validatePageRequirements } from '../utils';
 
-export function useContentValidation(): [boolean, () => Promise<void>] {
+export function useContentValidation(): [
+    boolean,
+    () => Promise<void>,
+    (boolean | string)[]
+] {
     const form = useFormikContext<any>();
     const { pages, pageState, validations } = usePages();
     const { state, currentPage } = pageState ?? {};
     const { isBrowser } = useSSR();
-    const [inputErrors, setInputErrors] = useState<boolean[]>([]);
+    const [inputErrors, setInputErrors] = useState<(boolean | string)[]>([]);
 
     // If every input field has a falsy error than the inputs are valid.
     const inputsAreValid = useMemo(
@@ -28,7 +32,7 @@ export function useContentValidation(): [boolean, () => Promise<void>] {
                     form.values,
                     validations
                 );
-                const errs: boolean[] = [];
+                const errs: (boolean | string)[] = [];
                 for (const [fieldKey, result] of validationResult) {
                     const inputKey = getInputFormKey(
                         fieldKey,
@@ -42,7 +46,7 @@ export function useContentValidation(): [boolean, () => Promise<void>] {
                                 .map((r) => '&bull;&nbsp;' + r) // bull = bullet point, nbsp = whitespace
                                 .join('<br/>')
                         );
-                        errs.push(true);
+                        errs.push(inputKey);
                     } else {
                         errs.push(false);
                         form.setFieldError(inputKey, undefined);
@@ -58,5 +62,5 @@ export function useContentValidation(): [boolean, () => Promise<void>] {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, pages, form.values, validations]);
 
-    return [inputsAreValid, validate];
+    return [inputsAreValid, validate, inputErrors];
 }

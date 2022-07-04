@@ -5,7 +5,7 @@ import {
     useStripe,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { ContentFieldProps } from '../../types';
+import { CanGoNext, ContentFieldProps } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import {
     Box,
@@ -165,7 +165,7 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
     return <PaymentElement onChange={(evt) => handleChange(evt.complete)} />;
 };
 
-export const ContentPayment = (props: PaymentProps) => {
+export const ContentPayment = (props: PaymentProps & CanGoNext) => {
     const [stripe] = useState(stripePromise);
     const [isLoading, loading] = useBoolean(false);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -207,7 +207,6 @@ export const ContentPayment = (props: PaymentProps) => {
         if (form.values) {
             const metadata = setupMetadata();
             loading.on();
-            console.log({ metadata });
             createPaymentIntent(form.values, metadata)
                 .then((result) => {
                     if (result.clientSecret) {

@@ -75,7 +75,13 @@ export const CustomContent = ({
                     case 'ContentPayment':
                         return (
                             <ContentPayment
-                                {...{ key, ...options, form, page }}
+                                {...{
+                                    key,
+                                    ...options,
+                                    form,
+                                    page,
+                                    onCanGoNext,
+                                }}
                             />
                         );
                     default:

@@ -1,6 +1,11 @@
 import { PageOption } from '../types';
 import { validateField } from './validateField';
-import { FormValues, getInputFormKey } from '@evento/calculations';
+import {
+    FormValues,
+    getFormValue,
+    getInputFormKey,
+    getSingleFormValue,
+} from '@evento/calculations';
 import { FormModel } from '@evento/models';
 
 type Result = [string, true | string[]];
@@ -27,16 +32,14 @@ export async function validatePageRequirements(
                 }
                 break;
             case 'ContentPayment':
-                key = getInputFormKey('payment', pageNumber);
                 if (key) {
+                    const value = !!getSingleFormValue(
+                        getInputFormKey('payment', pageNumber) + '.input',
+                        formValues
+                    )?.value;
                     inputs.set(
                         key,
-                        validateField(
-                            key + '.input',
-                            pageNumber,
-                            formValues,
-                            validations
-                        )
+                        Promise.resolve(value || ['Payment required'])
                     );
                 }
         }

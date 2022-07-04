@@ -1,6 +1,7 @@
 import { Either, isLeft, left, right } from 'fp-ts/lib/Either';
 import { ValidationTypes } from './ValidationTypes';
 import axios, { AxiosError } from 'axios';
+import isEmpty from 'is-empty';
 
 type Options = { fieldKey: string; pageNumber: number; url: string };
 export class MapAndValidate {
@@ -46,6 +47,8 @@ export class MapAndValidate {
                 return this.$regex(value, params);
             case '$extends':
                 return this.$extends(value, params);
+            case '$required':
+                return this.$required(value, params);
         }
         return right(true);
     }
@@ -102,6 +105,16 @@ export class MapAndValidate {
         } catch (error) {
             return left((error as any).message);
         }
+    }
+
+    private $required(
+        value: any,
+        obj: ValidationTypes.Required
+    ): Either<string, true> {
+        if (!isEmpty(obj.$required)) {
+            return !isEmpty(value) ? right(true) : left(obj.$required);
+        }
+        return right(true);
     }
 
     private $regex(

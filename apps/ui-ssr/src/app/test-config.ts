@@ -13,10 +13,6 @@ export const PokerValidations = {
         $minLength: [3, 'Name is too short'],
         $maxLength: [255, 'Name is too long'],
     },
-    email: {
-        $required: [true, 'Email is required'], // GET /api/v1/forms/:formId/validate?key=abc&value=xyz
-        $async: true,
-    },
 };
 
 export const PokerPages: any[] = [

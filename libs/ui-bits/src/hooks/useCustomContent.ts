@@ -1,13 +1,14 @@
 import { useFormikContext } from 'formik';
 import { useEffect } from 'react';
 import { usePages } from '../hooks';
+import { CanGoNext } from '../types';
 import { useContentValidation } from './useContentValidation';
 
-export const useCustomContent = (onCanGoNext: (val?: boolean) => void) => {
+export const useCustomContent = (onCanGoNext: CanGoNext['onCanGoNext']) => {
     const form = useFormikContext<any>();
     const { pages, pageState, submitFn } = usePages();
     const { currentPage } = pageState ?? {};
-    const [inputsAreValid] = useContentValidation();
+    const [inputsAreValid, _, inputs] = useContentValidation();
 
     useEffect(() => {
         if (
@@ -24,6 +25,11 @@ export const useCustomContent = (onCanGoNext: (val?: boolean) => void) => {
     }, [inputsAreValid, currentPage, submitFn]);
 
     useEffect(() => {
-        onCanGoNext(inputsAreValid);
-    }, [inputsAreValid, onCanGoNext, form, form.values, pages]);
+        if (inputs.length) {
+            onCanGoNext(
+                inputsAreValid,
+                'validation, ' + JSON.stringify(form.errors)
+            );
+        }
+    }, [inputsAreValid, onCanGoNext, form, form.values, pages, inputs]);
 };

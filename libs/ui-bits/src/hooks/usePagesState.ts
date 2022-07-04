@@ -28,7 +28,8 @@ export const createPageProps = <T>({ pageState, form }: CreatePageProps<T>) => {
 
     const props = currentPage.options as any;
     props.page = page;
-    props.onCanGoNext = (val = true) => {
+    props.onCanGoNext = (val = true, identifier = 'unknown') => {
+        console.info(identifier || '', 'setting canGoNext:', val);
         val ? actions.setCanGoNext.on() : actions.setCanGoNext.off();
     };
     props.form = form;
