@@ -3,6 +3,8 @@ import { CalcInfo, useSkip } from './useSkip';
 import { Dispatch, SetStateAction, useCallback } from 'react';
 import { PageOptions } from '../types';
 import { useButtonHandlers } from './useButtonHandlers';
+import { useWebhook } from './useWebhook';
+import { useFormikContext } from 'formik';
 
 interface UsePageTraversalProps {
     pages?: PageOptions[];
@@ -25,6 +27,9 @@ export const usePageTraversal = (props: UsePageTraversalProps) => {
         pages,
         transition,
     } = props;
+
+    const form = useFormikContext<any>();
+    const emit = useWebhook();
     const [canGoNext, setCanGoNext] = useBoolean();
     const { clearButtonHandlers, handlePress } = buttonHandlers;
 
@@ -38,6 +43,7 @@ export const usePageTraversal = (props: UsePageTraversalProps) => {
             transition.on();
             // clear the handler on success
             clearButtonHandlers();
+            emit('form.next', form.values);
             setCurrentIndex(next);
         });
     }, [
@@ -50,6 +56,8 @@ export const usePageTraversal = (props: UsePageTraversalProps) => {
         setCanGoNext,
         setCurrentIndex,
         transition,
+        emit,
+        form.values,
     ]);
 
     const previousPage = useCallback(() => {
