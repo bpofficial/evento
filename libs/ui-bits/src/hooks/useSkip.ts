@@ -1,37 +1,36 @@
 import { useCallback } from 'react';
-import { PageOptions } from '../types';
 import { useFormikContext } from 'formik';
 import { calculateField } from '@evento/calculations';
+import { FormModel, Page } from '@evento/models';
 
 export type CalcInfo = {
     inputs?: Map<string, string>;
     calculations?: Record<string, string>;
 };
 interface UseSkipProps {
-    pages?: PageOptions[];
-    info?: CalcInfo;
+    model: FormModel;
+    inputs: Map<string, string>;
 }
 
-export const useSkip = ({ pages = [], info }: UseSkipProps) => {
+export const useSkip = ({ model, inputs }: UseSkipProps) => {
     const form = useFormikContext<any>();
 
     // Handle skipping logic
     const shouldSkip = useCallback(
-        (page: PageOptions) => {
-            if (!page || !info || !info.inputs || !info.calculations)
-                return false;
+        (page: Page) => {
+            if (!page || !inputs || !model.calculations) return false;
 
-            if (page.options.skipPageCondition) {
+            if (page.options['skipPageCondition']) {
                 return calculateField(
-                    page.options.skipPageCondition,
-                    info.inputs,
-                    info.calculations,
+                    page.options['skipPageCondition'],
+                    inputs,
+                    model.calculations,
                     form.values
                 );
             }
             return false;
         },
-        [form, info]
+        [form, model, inputs]
     );
 
     /**
@@ -39,7 +38,8 @@ export const useSkip = ({ pages = [], info }: UseSkipProps) => {
      */
     const recurseSkip = useCallback(
         (idx: number, dir: -1 | 1): number => {
-            const len = pages.length - 1,
+            if (!model.pages) return 0;
+            const len = model.pages.length - 1,
                 idx1 = idx + dir;
 
             // If on the first & going back or on the last page and going forward, return 0.
@@ -49,12 +49,12 @@ export const useSkip = ({ pages = [], info }: UseSkipProps) => {
             const cmp = dir < 0 ? Math.max(idx1, 0) : Math.max(len - idx1, 0);
             if (cmp < 0) return 0;
 
-            if (shouldSkip(pages[idx1])) {
+            if (shouldSkip(model.pages[idx1])) {
                 return recurseSkip(idx1, dir);
             }
             return idx + dir;
         },
-        [pages, shouldSkip]
+        [model, shouldSkip]
     );
 
     const next = useCallback(

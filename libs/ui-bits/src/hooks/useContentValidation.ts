@@ -5,6 +5,7 @@ import useSSR from 'use-ssr';
 import { usePages } from './pageContext';
 import { useEnvironment } from './useEnvironment';
 import { validatePageRequirements } from '../utils';
+import { useModel } from './modelContext';
 
 export function useContentValidation(): [
     boolean,
@@ -12,7 +13,8 @@ export function useContentValidation(): [
     (boolean | string)[]
 ] {
     const form = useFormikContext<any>();
-    const { pages, pageState, validations } = usePages();
+    const { pages = [], validations } = useModel();
+    const { pageState } = usePages();
     const { state, currentPage } = pageState ?? {};
     const { isBrowser } = useSSR();
     const [inputErrors, setInputErrors] = useState<(boolean | string)[]>([]);

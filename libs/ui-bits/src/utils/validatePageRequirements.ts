@@ -1,16 +1,15 @@
-import { PageOption } from '../types';
 import { validateField } from './validateField';
 import {
     FormValues,
     getInputFormKey,
     getSingleFormValue,
 } from '@evento/calculations';
-import { FormModel } from '@evento/models';
+import { FormModel, Page } from '@evento/models';
 
 type Result = [string, true | string[]];
 
 export async function validatePageRequirements(
-    page: PageOption<'CustomContent'>,
+    page: Page,
     pageNumber: number,
     formValues: FormValues,
     validations?: FormModel['validations'],

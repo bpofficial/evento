@@ -8,9 +8,9 @@ export function formatError(
         error: true,
         statusCode: http_status,
         body: JSON.stringify({
-            error: error.endsWith('Error') ? error.replace('Error', '') : error,
+            error,
             error_description,
-            error_code: error_code,
+            error_code,
         }),
     };
 }

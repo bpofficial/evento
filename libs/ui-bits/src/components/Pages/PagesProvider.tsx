@@ -5,38 +5,25 @@ import { BackButton } from './BackButton';
 import {
     createPageProps,
     PagesContext,
+    useModel,
     usePagesState,
     useSubmit,
 } from '../../hooks';
 import { useMemo } from 'react';
-import { registerInputs } from '@evento/calculations';
-import { AppProps } from '../../evento';
 
-export interface PagesProviderProps {
-    configuration: AppProps['configuration'];
-}
+export const PagesProvider = () => {
+    const model = useModel();
+    const inputs = model.getInputs();
 
-export const PagesProvider = ({ configuration }: PagesProviderProps) => {
-    const { formId, version, pages, calculations, validations } =
-        configuration ?? {};
-    const submitFn = useSubmit(formId);
-    const inputs = registerInputs(pages, calculations);
-    const info = { inputs, calculations, validations };
-
+    const submitFn = useSubmit();
     const form = useFormikContext();
-    const pageState = usePagesState(pages, info);
+    const pageState = usePagesState(inputs);
+
     const props = useMemo(() => {
         return createPageProps({ pageState, form });
     }, [form, pageState]);
 
-    const ctx = {
-        ...info,
-        pages,
-        pageState,
-        submitFn,
-        formId,
-        version,
-    } as any;
+    const ctx = { inputs, pageState, submitFn } as any;
 
     const { Component, transitioning } = pageState ?? {};
 

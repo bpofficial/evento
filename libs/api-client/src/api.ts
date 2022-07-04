@@ -5,6 +5,7 @@ import * as createSignature from 'oauth1-signature';
 import { FormsApi } from './forms-api';
 import { UserApi } from './user-api';
 import { BillingApi } from './billing-api';
+import { HooksApi } from './hooks-api';
 
 interface EventoApiConstructorParams {
     gatewayUrl: string;
@@ -106,5 +107,9 @@ export class EventoApi {
 
     get billing() {
         return new BillingApi(this);
+    }
+
+    get hooks() {
+        return new HooksApi(this);
     }
 }

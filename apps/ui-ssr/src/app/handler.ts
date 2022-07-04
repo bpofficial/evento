@@ -17,6 +17,7 @@ export const handler = async () => {
         pages: PokerPages,
         calculations: PokerCalculations,
         validations: PokerValidations,
+        hooksEnabled: false,
     }).toJSON();
 
     const context: RenderContext<typeof EventoApp> = {

@@ -4,16 +4,14 @@ import { PagesProvider } from './components';
 import {
     EnvironmentContext,
     IEnvironmentContext,
+    ModelProvider,
     useCustomTheme,
 } from './hooks';
 import { FormModel } from '@evento/models';
 import { RootComponentHelmetData } from './types';
 
 export interface AppProps {
-    configuration: Pick<
-        FormModel,
-        'formId' | 'calculations' | 'meta' | 'pages' | 'version' | 'validations'
-    >;
+    configuration: ReturnType<FormModel['toJSON']>;
     environment: IEnvironmentContext;
 }
 
@@ -30,7 +28,9 @@ export function EventoApp({
                 <Formik initialValues={{}} onSubmit={console.log}>
                     <Box h="100%" w="100vw">
                         <Box h="100%" p="8">
-                            <PagesProvider {...{ configuration }} />
+                            <ModelProvider model={configuration}>
+                                <PagesProvider />
+                            </ModelProvider>
                         </Box>
                     </Box>
                 </Formik>

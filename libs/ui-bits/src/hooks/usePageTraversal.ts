@@ -1,15 +1,16 @@
 import { useBoolean } from '@chakra-ui/react';
 import { CalcInfo, useSkip } from './useSkip';
 import { Dispatch, SetStateAction, useCallback } from 'react';
-import { PageOptions } from '../types';
 import { useButtonHandlers } from './useButtonHandlers';
 import { useWebhook } from './useWebhook';
 import { useFormikContext } from 'formik';
+import { PagesProviderProps } from '../components';
+import { FormModel } from '@evento/models';
 
 interface UsePageTraversalProps {
-    pages?: PageOptions[];
+    model: FormModel;
+    inputs: Map<string, string>;
     state?: any;
-    info?: CalcInfo;
     currentIndex: number;
     setCurrentIndex: Dispatch<SetStateAction<number>>;
     buttonHandlers: ReturnType<typeof useButtonHandlers>;
@@ -19,27 +20,27 @@ interface UsePageTraversalProps {
 
 export const usePageTraversal = (props: UsePageTraversalProps) => {
     const {
+        model,
         buttonHandlers,
         loading,
         currentIndex,
         setCurrentIndex,
-        info,
-        pages,
+        inputs,
         transition,
     } = props;
 
     const form = useFormikContext<any>();
-    const emit = useWebhook();
+    const emit = useWebhook(model);
     const [canGoNext, setCanGoNext] = useBoolean();
     const { clearButtonHandlers, handlePress } = buttonHandlers;
 
-    const { next, previous } = useSkip({ pages, info });
+    const { next, previous } = useSkip({ model, inputs });
 
     const nextPage = useCallback(() => {
         handlePress('next', () => {
             setCanGoNext.off();
             loading.off();
-            if (currentIndex >= (pages?.length ?? 0) - 1) return;
+            if (currentIndex >= (model.pages?.length ?? 0) - 1) return;
             transition.on();
             // clear the handler on success
             clearButtonHandlers();
@@ -47,17 +48,17 @@ export const usePageTraversal = (props: UsePageTraversalProps) => {
             setCurrentIndex(next);
         });
     }, [
-        clearButtonHandlers,
-        currentIndex,
         handlePress,
-        loading,
-        next,
-        pages?.length,
         setCanGoNext,
-        setCurrentIndex,
+        loading,
+        currentIndex,
+        model.pages?.length,
         transition,
+        clearButtonHandlers,
         emit,
         form.values,
+        setCurrentIndex,
+        next,
     ]);
 
     const previousPage = useCallback(() => {

@@ -1,12 +1,12 @@
 import { useBoolean, usePrevious } from '@chakra-ui/react';
 import { FormikContextType } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
-import { PagesProviderProps } from '../components';
 import * as Screens from '../screens';
 import { PageProps } from '../types';
-import { CalcInfo } from './useSkip';
 import { useButtonHandlers } from './useButtonHandlers';
 import { usePageTraversal } from './usePageTraversal';
+import { FormModel } from '@evento/models';
+import { useModel } from './modelContext';
 
 interface CreatePageProps<T> {
     pageState: ReturnType<typeof usePagesState>;
@@ -36,15 +36,13 @@ export const createPageProps = <T>({ pageState, form }: CreatePageProps<T>) => {
     return props;
 };
 
-export const usePagesState = (
-    pages?: PagesProviderProps['configuration']['pages'],
-    info?: CalcInfo
-) => {
+export const usePagesState = (inputs: Map<string, string>) => {
+    const model = useModel();
     const [currentIndex, setCurrentIndex] = useState(0);
     const previousIndex = usePrevious(currentIndex);
     const [transitioning, transition] = useBoolean(false);
     const [isLoading, loading] = useBoolean(false);
-    const isLastPage = currentIndex === (pages?.length ?? 0) - 1;
+    const isLastPage = currentIndex === (model.pages?.length ?? 0) - 1;
     const isFirstPage = currentIndex === 0;
 
     const state = useMemo(
@@ -61,8 +59,8 @@ export const usePagesState = (
     const { registerNextHandler, registerBackHandler } = buttonHandlers;
     const { nextPage, previousPage, canGoNext, setCanGoNext } =
         usePageTraversal({
-            pages: pages as any,
-            info,
+            model,
+            inputs,
             buttonHandlers,
             loading,
             transition,
@@ -74,7 +72,7 @@ export const usePagesState = (
         transition.off();
     }, [currentIndex, transition]);
 
-    const currentPage = pages?.[currentIndex];
+    const currentPage = model.pages?.[currentIndex];
     if (!currentPage) return null;
 
     const type: keyof typeof Screens = currentPage.type as keyof typeof Screens;

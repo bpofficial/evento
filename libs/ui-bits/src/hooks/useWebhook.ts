@@ -1,15 +1,15 @@
-import axios from 'axios';
-import { usePages } from '.';
+import { useModel } from './modelContext';
 import { useEnvironment } from './useEnvironment';
 import { sanitize } from 'string-sanitizer';
 import { HookEventTypes } from '@evento/models';
+import { EventoApi } from '@evento/api-client';
 
 export function useWebhook() {
-    const { formId } = usePages();
-    const { api } = useEnvironment();
+    const model = useModel();
+    const environment = useEnvironment();
 
     /**
-     * { 0_CustomContent: { value: { name: { value: 'some name' } } } }
+     * { 0_CustomContent: { name: { value: 'some name' } } }
      */
     const convertFormValuesToFields = (data: any) => {
         const fields: Record<string, string | number | boolean> = {};
@@ -28,13 +28,19 @@ export function useWebhook() {
         data: Record<string, string | number | boolean>
     ) => {
         const fields = convertFormValuesToFields(data);
-        const url = new URL(`${api.baseUrl}/api/v1/forms/${formId}/trigger`);
-        return axios.post(url.toString(), { event, fields });
+        if (!model.formId) return;
+
+        const api = new EventoApi({
+            gatewayUrl: environment.api.baseUrl,
+        });
+
+        return api.hooks.trigger(model.formId, event, fields);
     };
 
     return (event: HookEventTypes, data: Record<string, any>) => {
+        if (event !== 'form.submit' && !model.hooksEnabled) return;
         try {
-            emitHook(event, data).then().catch();
+            emitHook(event, data).then().catch(console.warn);
         } catch (error: any) {
             console.warn('%s', sanitize(error.message));
             console.debug(error);

@@ -1,7 +1,7 @@
 import { Either, isLeft, left, right } from 'fp-ts/lib/Either';
 import { ValidationTypes } from './ValidationTypes';
 import axios, { AxiosError } from 'axios';
-import isEmpty from 'is-empty';
+import { URL } from 'url';
 
 type Options = { fieldKey: string; pageNumber: number; url: string };
 export class MapAndValidate {

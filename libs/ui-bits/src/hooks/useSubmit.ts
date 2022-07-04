@@ -1,13 +1,11 @@
 import { useFormikContext } from 'formik';
-import { useEnvironment } from './useEnvironment';
-import { EventoApi } from '@evento/api-client';
+import { useWebhook } from '.';
 
-export const useSubmit = (formId?: string) => {
-    const environment = useEnvironment();
+export const useSubmit = () => {
+    const emit = useWebhook();
     const form = useFormikContext<any>();
-    return async () => {
-        const api = new EventoApi({
-            gatewayUrl: environment.api.baseUrl,
-        });
+
+    return () => {
+        emit('form.submit', form.values);
     };
 };

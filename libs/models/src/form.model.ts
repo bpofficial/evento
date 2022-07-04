@@ -6,7 +6,7 @@ export interface Page<T = any> {
     type: string;
     options: {
         content: T[];
-    };
+    } & Record<string, string | number | boolean>;
 }
 
 export class FormModel {
@@ -20,6 +20,7 @@ export class FormModel {
     calculations?: Record<string, any>;
     validations?: Record<string, any>;
     version?: number;
+    hooksEnabled?: boolean;
 
     constructor(params: Partial<FormModel> = {}) {
         this._id = params._id || undefined;
@@ -28,6 +29,7 @@ export class FormModel {
         this.calculations = params.calculations;
         this.validations = params.validations;
         this.version = params.version;
+        this.hooksEnabled = params.hooksEnabled;
 
         this.setDefaults();
     }
@@ -41,6 +43,7 @@ export class FormModel {
             calculations: this?.calculations,
             validations: this?.validations,
             version: this?.version,
+            hooksEnabled: !!this?.hooksEnabled,
         };
     }
 
@@ -56,6 +59,7 @@ export class FormModel {
             pages: obj?.['pages'],
             calculations: obj?.['calculations'],
             version: obj?.['version'],
+            hooksEnabled: obj?.['hooksEnabled'],
         });
     }
 
