@@ -3,14 +3,16 @@ import { validateField } from './validateField';
 import { FormValues, getInputFormKey } from '@evento/calculations';
 import { FormModel } from '@evento/models';
 
-export function validatePageRequirements(
+type Result = [string, true | string[]];
+
+export async function validatePageRequirements(
     page: PageOption<'CustomContent'>,
     pageNumber: number,
     formValues: FormValues,
     validations?: FormModel['validations']
-): Map<string, string[] | true> {
-    const inputs: Map<string, string[] | true> = new Map();
-    page.options.content.forEach((content) => {
+): Promise<Map<string, true | string[]>> {
+    const inputs: Map<string, Promise<true | string[]>> = new Map();
+    page.options.content.map(async (content) => {
         let key: string | null = null;
         switch (content.type) {
             case 'ContentCheckboxGroup':
@@ -40,5 +42,13 @@ export function validatePageRequirements(
         }
     });
 
-    return inputs;
+    const result: Result[] = await Promise.all(
+        Array.from(inputs.entries()).map(async ([key, promise]) => {
+            return promise
+                .then((res) => [key, res] as Result)
+                .catch((err) => [key, [err?.message]] as Result);
+        })
+    );
+
+    return new Map<string, true | string[]>(result);
 }

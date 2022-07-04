@@ -17,7 +17,6 @@ export interface PagesProviderProps {
 }
 
 export const PagesProvider = ({ configuration }: PagesProviderProps) => {
-    console.log({ configuration });
     const { formId, version, pages, calculations, validations } =
         configuration ?? {};
     const submitFn = useSubmit(formId);

@@ -1,16 +1,25 @@
 import { Either, isLeft, left, right } from 'fp-ts/lib/Either';
 import { ValidationTypes } from './ValidationTypes';
-import isEmpty from 'is-empty';
+import axios, { AxiosError } from 'axios';
 
+type Options = { fieldKey: string; pageNumber: number; url: string };
 export class MapAndValidate {
-    interpret(
+    async interpret(
         value: any,
-        validation: Record<string, any>
-    ): Either<string[], true> {
-        const results = Object.entries(validation).map(([key, params]) => {
-            const result = this.call(key, value, { [key]: params });
-            return isLeft(result) ? result.left : result.right;
-        });
+        validation: Record<string, any> | null,
+        options: Options
+    ): Promise<Either<string[], true>> {
+        if (!validation) return right(true);
+        const promises = Object.entries(validation).map(
+            async ([key, params]) => {
+                let result = this.call(key, value, { [key]: params }, options);
+                if (result instanceof Promise) {
+                    result = await result;
+                }
+                return isLeft(result) ? result.left : result.right;
+            }
+        );
+        const results = await Promise.all(promises);
         const errors = results.filter(
             (v) => typeof v === 'string'
         ) as unknown as string[];
@@ -18,7 +27,12 @@ export class MapAndValidate {
         return right(true);
     }
 
-    private call(key: string, value: any, params: any): Either<string, true> {
+    private call(
+        key: string,
+        value: any,
+        params: any,
+        options: Options
+    ): Either<string, true | Promise<Either<string, true>>> {
         switch (key) {
             case '$type':
                 return this.$type(value, params);
@@ -27,9 +41,7 @@ export class MapAndValidate {
             case '$maxLength':
                 return this.$maxLength(value, params);
             case '$async':
-                return this.$async(value, params);
-            case '$required':
-                return this.$required(value, params);
+                return this.$async(value, params, options);
             case '$regex':
                 return this.$regex(value, params);
             case '$extends':
@@ -65,19 +77,31 @@ export class MapAndValidate {
 
     private $async(
         value: any,
-        obj: ValidationTypes.Async
-    ): Either<string, true> {
-        return right(true);
-    }
-
-    private $required(
-        value: any,
-        obj: ValidationTypes.Required
-    ): Either<string, true> {
-        if (!isEmpty(obj.$required)) {
-            return !isEmpty(value) ? right(true) : left(obj.$required);
+        obj: ValidationTypes.Async,
+        options: Options
+    ): Either<string, Promise<Either<string, true>>> {
+        try {
+            const url = new URL(options.url);
+            url.searchParams.set('key', options.fieldKey);
+            url.searchParams.set('value', value?.toString?.() || '');
+            const result: any = axios
+                .get(url.toString())
+                .then((res) => {
+                    if (res.status.toString().startsWith('2')) {
+                        return right(true);
+                    }
+                    return left(res.data.message);
+                })
+                .catch((err) => {
+                    if (err instanceof AxiosError) {
+                        return left(err.response?.data.message);
+                    }
+                    return left(err?.message);
+                });
+            return right(result);
+        } catch (error) {
+            return left((error as any).message);
         }
-        return right(true);
     }
 
     private $regex(

@@ -10,7 +10,6 @@ export const PokerCalculations = {
 
 export const PokerValidations = {
     name: {
-        $required: 'Name is required',
         $minLength: [3, 'Name is too short'],
         $maxLength: [255, 'Name is too long'],
     },

@@ -12,7 +12,8 @@ import {
     getSingleFormValue,
 } from '@evento/calculations';
 import { ContentFieldProps } from '../../types';
-import { HTMLInputTypeAttribute, useEffect } from 'react';
+import { HTMLInputTypeAttribute, useMemo } from 'react';
+import { useFormikContext } from 'formik';
 
 interface ContentInputProps extends ContentFieldProps {
     label: string;
@@ -30,21 +31,26 @@ export const ContentInput = ({
     label,
     options,
     page,
-    form,
     fieldKey,
 }: ContentInputProps) => {
+    const form = useFormikContext<any>();
     const key = `${page.formikKey}.${fieldKey}`;
     const value = getSingleFormValue(key, form.values)?.value;
     const { helperText, ...props } = options ?? {};
 
     const onChange = (value: string) => {
-        form.setFieldValue(key, { value });
+        form.setFieldValue(key, { value }, false);
     };
 
-    const touched = getFormTouched(key, form.touched);
-    const error = getFormError(key, form.errors);
+    const touched = useMemo(
+        () => getFormTouched(key, form.touched),
+        [form.touched, key]
+    );
 
-    console.log({ error, touched });
+    const error = useMemo(
+        () => getFormError(key, form.errors),
+        [form.errors, key]
+    );
 
     return (
         <FormControl
@@ -61,9 +67,14 @@ export const ContentInput = ({
                 onBlur={() => form.setFieldTouched(key, true, false)}
             />
             {touched && error ? (
-                <FormErrorMessage>{error}</FormErrorMessage>
-            ) : null}
-            <FormHelperText>{helperText}</FormHelperText>
+                <FormErrorMessage>
+                    <div
+                        dangerouslySetInnerHTML={{ __html: error ?? '' }}
+                    ></div>
+                </FormErrorMessage>
+            ) : (
+                <FormHelperText>{helperText}</FormHelperText>
+            )}
         </FormControl>
     );
 };

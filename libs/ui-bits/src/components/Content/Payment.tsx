@@ -7,7 +7,13 @@ import {
 import { loadStripe } from '@stripe/stripe-js';
 import { ContentFieldProps } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
-import { Box, CircularProgress, useBoolean, useToast } from '@chakra-ui/react';
+import {
+    Box,
+    CircularProgress,
+    Flex,
+    useBoolean,
+    useToast,
+} from '@chakra-ui/react';
 import {
     getInputFormKey,
     getSingleFormValue,
@@ -218,7 +224,9 @@ export const ContentPayment = (props: PaymentProps) => {
     return (
         <Box w="100%">
             {isLoading || !clientSecret ? (
-                <CircularProgress color={'custom.500'} isIndeterminate />
+                <Flex w="100%" justifyContent="center" mt="4">
+                    <CircularProgress color={'custom.500'} isIndeterminate />
+                </Flex>
             ) : (
                 <Elements {...{ options: { clientSecret }, stripe }}>
                     <ContentPaymentComponent {...props} />

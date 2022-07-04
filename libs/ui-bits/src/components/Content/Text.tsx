@@ -44,7 +44,7 @@ export const ContentText = ({ value, options }: ContentTextProps) => {
             {contentArr.map((content, key) => {
                 switch (typeof content) {
                     case 'string':
-                        return <Markup {...{ content }} />;
+                        return <Markup {...{ key, content }} />;
                     case 'object':
                         return <ContentLink {...{ key, ...content.options }} />;
                     default:

@@ -7,22 +7,26 @@ import { FormModel } from '@evento/models';
 import isEmpty from 'is-empty';
 import { isLeft } from 'fp-ts/lib/Either';
 
-export function validateField(
+export async function validateField(
     fieldKey: string,
     pageNumber: number,
     formValues: Record<string, any>,
     validations?: FormModel['validations']
 ) {
     const validators = new Map(Object.entries(validations ?? {}));
-    const validator = validators.get(fieldKey) ?? {};
+    const validator = validators.get(fieldKey) ?? null;
 
     const fullKey = getInputFormKey(fieldKey, pageNumber) ?? '';
     // Each field will be an object and the value will be represented by the value property on that object.
     const value = getSingleFormValue(fullKey, formValues)?.value;
 
-    if (!validator.$required && isEmpty(value)) return true;
+    if (!validator && isEmpty(value)) return true;
     const validate = new MapAndValidate();
-    const result = validate.interpret(value, validator);
+    const result = await validate.interpret(value, validator, {
+        fieldKey,
+        pageNumber,
+        url: '',
+    });
     if (isLeft(result)) return result.left;
     return result.right;
 }
