@@ -2,7 +2,8 @@ import { getInputFormKey } from '@evento/calculations';
 import { useFormikContext } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
 import useSSR from 'use-ssr';
-import { usePages } from '.';
+import { usePages } from './pageContext';
+import { useEnvironment } from './useEnvironment';
 import { validatePageRequirements } from '../utils';
 
 export function useContentValidation(): [
@@ -15,6 +16,7 @@ export function useContentValidation(): [
     const { state, currentPage } = pageState ?? {};
     const { isBrowser } = useSSR();
     const [inputErrors, setInputErrors] = useState<(boolean | string)[]>([]);
+    const env = useEnvironment();
 
     // If every input field has a falsy error than the inputs are valid.
     const inputsAreValid = useMemo(
@@ -30,7 +32,8 @@ export function useContentValidation(): [
                     currentPage,
                     state.currentIndex,
                     form.values,
-                    validations
+                    validations,
+                    env.api.baseUrl
                 );
                 const errs: (boolean | string)[] = [];
                 for (const [fieldKey, result] of validationResult) {

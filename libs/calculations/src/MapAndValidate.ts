@@ -47,8 +47,6 @@ export class MapAndValidate {
                 return this.$regex(value, params);
             case '$extends':
                 return this.$extends(value, params);
-            case '$required':
-                return this.$required(value, params);
         }
         return right(true);
     }
@@ -83,6 +81,7 @@ export class MapAndValidate {
         obj: ValidationTypes.Async,
         options: Options
     ): Either<string, Promise<Either<string, true>>> {
+        if (!options.url) return right(Promise.resolve(right(true)));
         try {
             const url = new URL(options.url);
             url.searchParams.set('key', options.fieldKey);
@@ -105,16 +104,6 @@ export class MapAndValidate {
         } catch (error) {
             return left((error as any).message);
         }
-    }
-
-    private $required(
-        value: any,
-        obj: ValidationTypes.Required
-    ): Either<string, true> {
-        if (!isEmpty(obj.$required)) {
-            return !isEmpty(value) ? right(true) : left(obj.$required);
-        }
-        return right(true);
     }
 
     private $regex(

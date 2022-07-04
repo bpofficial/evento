@@ -11,7 +11,8 @@ export async function validateField(
     fieldKey: string,
     pageNumber: number,
     formValues: Record<string, any>,
-    validations?: FormModel['validations']
+    validations?: FormModel['validations'],
+    url?: string
 ) {
     const validators = new Map(Object.entries(validations ?? {}));
     const validator = validators.get(fieldKey) ?? null;
@@ -25,7 +26,7 @@ export async function validateField(
     const result = await validate.interpret(value, validator, {
         fieldKey,
         pageNumber,
-        url: '',
+        url: url || '',
     });
     if (isLeft(result)) return result.left;
     return result.right;

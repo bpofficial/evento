@@ -2,7 +2,6 @@ import { PageOption } from '../types';
 import { validateField } from './validateField';
 import {
     FormValues,
-    getFormValue,
     getInputFormKey,
     getSingleFormValue,
 } from '@evento/calculations';
@@ -14,7 +13,8 @@ export async function validatePageRequirements(
     page: PageOption<'CustomContent'>,
     pageNumber: number,
     formValues: FormValues,
-    validations?: FormModel['validations']
+    validations?: FormModel['validations'],
+    url?: string
 ): Promise<Map<string, true | string[]>> {
     const inputs: Map<string, Promise<true | string[]>> = new Map();
     page.options.content.map(async (content) => {
@@ -27,7 +27,13 @@ export async function validatePageRequirements(
                 if (key) {
                     inputs.set(
                         key,
-                        validateField(key, pageNumber, formValues, validations)
+                        validateField(
+                            key,
+                            pageNumber,
+                            formValues,
+                            validations,
+                            url
+                        )
                     );
                 }
                 break;
