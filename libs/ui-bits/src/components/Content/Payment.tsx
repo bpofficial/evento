@@ -19,9 +19,8 @@ import {
     getSingleFormValue,
     replaceTextWithInputValue,
 } from '@evento/calculations';
-import { usePages, usePaymentIntent } from '../../hooks';
+import { useModel, usePages, usePaymentIntent } from '../../hooks';
 import { useFormikContext } from 'formik';
-import { FormModel } from '@evento/models';
 
 const stripePromise = loadStripe(
     'pk_test_51H5lSlIHLTnuvRM7Ah4nUAVj66F8BxJRnhhRYcQcyMMUv6AjkaZSQJp0H9EvuAgqjnoS7gHHWFJxU9G3oBbc8RQm00yjqLBvfK'
@@ -170,18 +169,10 @@ export const ContentPayment = (props: PaymentProps & CanGoNext) => {
     const [isLoading, loading] = useBoolean(false);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
 
-    const pages = usePages();
+    const { inputs } = usePages();
+    const model = useModel();
     const form = useFormikContext<any>();
     const createPaymentIntent = usePaymentIntent();
-
-    const { inputs, calculations } = pages;
-
-    const model = new FormModel({
-        formId: pages.formId,
-        version: pages.version,
-        pages: pages.pages,
-        calculations,
-    });
 
     const setupMetadata = () => {
         if (props.metadata) {

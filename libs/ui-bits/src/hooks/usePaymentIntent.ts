@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 import { useEnvironment } from './useEnvironment';
 import { EventoApi } from '@evento/api-client';
 import { isLeft } from 'fp-ts/lib/Either';
-import { usePages } from '.';
+import { useModel } from './modelContext';
 
 export const usePaymentIntent = () => {
     const environment = useEnvironment();
-    const { formId, version } = usePages();
+    const { formId, version } = useModel();
 
     return useCallback(
         async (values: any, metadata?: Record<string, string>) => {

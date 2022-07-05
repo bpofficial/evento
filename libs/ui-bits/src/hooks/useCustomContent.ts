@@ -11,23 +11,13 @@ export const useCustomContent = (onCanGoNext: CanGoNext['onCanGoNext']) => {
     const { currentPage } = pageState ?? {};
     const [inputsAreValid, _, inputs] = useContentValidation();
 
-    console.log({
-        inputsAreValid,
-        submitOnLoad: (currentPage as any)?.options.submitOnLoad,
-        submitFn,
-    });
-
     useEffect(() => {
         if (
             inputsAreValid &&
             currentPage &&
             (currentPage as any).options?.submitOnLoad
         ) {
-            submitFn?.()
-                ?.then?.((data) => {
-                    console.log(data);
-                })
-                ?.catch?.(console.warn);
+            submitFn?.();
         }
     }, [inputsAreValid, currentPage, submitFn]);
 

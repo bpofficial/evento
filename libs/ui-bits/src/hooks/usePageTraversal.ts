@@ -1,10 +1,9 @@
 import { useBoolean } from '@chakra-ui/react';
-import { CalcInfo, useSkip } from './useSkip';
+import { useSkip } from './useSkip';
 import { Dispatch, SetStateAction, useCallback } from 'react';
 import { useButtonHandlers } from './useButtonHandlers';
 import { useWebhook } from './useWebhook';
 import { useFormikContext } from 'formik';
-import { PagesProviderProps } from '../components';
 import { FormModel } from '@evento/models';
 
 interface UsePageTraversalProps {
@@ -30,7 +29,7 @@ export const usePageTraversal = (props: UsePageTraversalProps) => {
     } = props;
 
     const form = useFormikContext<any>();
-    const emit = useWebhook(model);
+    const emit = useWebhook();
     const [canGoNext, setCanGoNext] = useBoolean();
     const { clearButtonHandlers, handlePress } = buttonHandlers;
 

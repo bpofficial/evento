@@ -18,7 +18,6 @@ export interface AppProps {
 export function EventoApp({
     configuration,
     environment,
-    helmet,
 }: AppProps & RootComponentHelmetData) {
     const theme = useCustomTheme();
 
