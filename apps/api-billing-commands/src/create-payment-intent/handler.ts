@@ -41,7 +41,7 @@ export async function createPaymentIntent(event: APIGatewayEvent) {
     // }
     // const pageConfig = result.right;
     const formConfig = new FormModel({
-        pages: TestConfig.Pages,
+        pages: TestConfig.Pages as any,
         calculations: TestConfig.Calculations,
         validations: TestConfig.Validations,
     });

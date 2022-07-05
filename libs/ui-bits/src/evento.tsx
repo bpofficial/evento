@@ -9,6 +9,8 @@ import {
 } from './hooks';
 import { FormModel } from '@evento/models';
 import { RootComponentHelmetData } from './types';
+import { polyfill } from 'interweave-ssr';
+polyfill();
 
 export interface AppProps {
     configuration: ReturnType<FormModel['toJSON']>;

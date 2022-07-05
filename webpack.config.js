@@ -26,7 +26,7 @@ module.exports = {
         ],
     },
     mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
-    stats: 'minimal', // errors-only, minimal, none, normal, verbose
+    stats: 'none', // errors-only, minimal, none, normal, verbose
     output: {
         libraryTarget: 'commonjs',
         path: path.resolve(__dirname, '.webpack'),

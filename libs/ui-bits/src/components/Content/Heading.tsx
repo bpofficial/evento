@@ -12,7 +12,6 @@ interface ContentHeadingProps extends PageForm {
 
 export const ContentHeading = ({ value, options }: ContentHeadingProps) => {
     value = useReplaceInputValue(value);
-
     return (
         <Heading w="100%" {...options}>
             {value}

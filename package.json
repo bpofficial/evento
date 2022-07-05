@@ -23,6 +23,7 @@
         "fp-ts": "^2.12.1",
         "framer-motion": "^6",
         "interweave": "^13.0.0",
+        "interweave-ssr": "^2.0.0",
         "is-empty": "^1.2.0",
         "mongodb": "^4.7.0",
         "oauth1-signature": "^1.0.5",

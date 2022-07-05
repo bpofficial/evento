@@ -50,7 +50,7 @@ module.exports = [
             }),
         ],
         entry: { './src/app/hydrate': './src/app/hydrate.tsx' },
-        stats: 'minimal', // errors-only, minimal, none, normal, verbose
+        stats: 'none', // errors-only, minimal, none, normal, verbose
         output: {
             ...config.output,
             path: path.resolve(outDir, './src/app/assets/'),
