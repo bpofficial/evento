@@ -6,6 +6,7 @@ interface IPageContext {
     inputs: Map<string, string>;
     pageState: PageState;
     submitFn: () => Promise<AxiosResponse>;
+    preview: boolean
 }
 
 export const PagesContext = createContext<IPageContext>({
@@ -14,6 +15,7 @@ export const PagesContext = createContext<IPageContext>({
     submitFn: (() => {
         //
     }) as any,
+    preview: false
 });
 
 export const usePages = () => {

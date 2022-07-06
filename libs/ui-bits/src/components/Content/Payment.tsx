@@ -4,7 +4,7 @@ import {
     useElements,
     useStripe,
 } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, StripeError } from '@stripe/stripe-js';
 import { CanGoNext, ContentFieldProps } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -37,7 +37,7 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
     const pages = usePages();
 
     const { form, nameFieldKey } = props;
-    const { inputs, pageState } = pages;
+    const { inputs, pageState, preview } = pages;
 
     const [name, setName] = useState<string | null>(null);
     const key = getInputFormKey('payment', pageState?.state?.currentIndex);
@@ -87,18 +87,23 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
 
         cardElement.update({ readOnly: true });
 
-        const { error } = await stripe.confirmPayment({
-            elements: elements,
-            confirmParams: {
-                return_url: '',
-                payment_method_data: {
-                    billing_details: {
-                        name,
+        let error: StripeError | undefined;
+        if (!preview) {
+            const result = await stripe.confirmPayment({
+                elements: elements,
+                confirmParams: {
+                    return_url: '',
+                    payment_method_data: {
+                        billing_details: {
+                            name,
+                        },
                     },
                 },
-            },
-            redirect: 'if_required',
-        });
+                redirect: 'if_required',
+            });
+            error = result.error;
+        }
+
         // This point will only be reached if there is an immediate error when
         // confirming the payment. Otherwise, your customer will be redirected to
         // your `return_url`. For some payment methods like iDEAL, your customer will
@@ -123,7 +128,7 @@ export const ContentPaymentComponent = (props: PaymentProps) => {
         }
         cardElement.update({ readOnly: false });
         return true;
-    }, [stripe, elements, name, toast, form, key]);
+    }, [stripe, elements, name, toast, form, key, preview]);
 
     useEffect(() => {
         const nameFullKey = inputs.get(nameFieldKey);

@@ -11,11 +11,11 @@ import {
 } from '../../hooks';
 import { useMemo } from 'react';
 
-export const PagesProvider = () => {
+export const PagesProvider = ({ preview = false }) => {
     const model = useModel();
     const inputs = model.getInputs();
 
-    const submitFn = useSubmit();
+    const submitFn = useSubmit(preview);
     const form = useFormikContext();
     const pageState = usePagesState(inputs);
 
@@ -23,7 +23,7 @@ export const PagesProvider = () => {
         return createPageProps({ pageState, form });
     }, [form, pageState]);
 
-    const ctx = { inputs, pageState, submitFn } as any;
+    const ctx = { inputs, pageState, submitFn, preview } as any;
 
     const { Component, transitioning } = pageState ?? {};
 

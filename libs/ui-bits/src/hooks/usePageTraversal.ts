@@ -15,6 +15,7 @@ interface UsePageTraversalProps {
     buttonHandlers: ReturnType<typeof useButtonHandlers>;
     loading: ReturnType<typeof useBoolean>[1];
     transition: ReturnType<typeof useBoolean>[1];
+    preview?: boolean
 }
 
 export const usePageTraversal = (props: UsePageTraversalProps) => {
@@ -26,10 +27,11 @@ export const usePageTraversal = (props: UsePageTraversalProps) => {
         setCurrentIndex,
         inputs,
         transition,
+        preview = false
     } = props;
 
     const form = useFormikContext<any>();
-    const emit = useWebhook();
+    const emit = useWebhook(preview);
     const [canGoNext, setCanGoNext] = useBoolean();
     const { clearButtonHandlers, handlePress } = buttonHandlers;
 

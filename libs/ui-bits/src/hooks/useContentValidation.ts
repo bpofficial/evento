@@ -35,7 +35,7 @@ export function useContentValidation(): [
                     state.currentIndex,
                     form.values,
                     validations,
-                    env.api.baseUrl
+                    env?.api?.baseUrl
                 );
                 const errs: (boolean | string)[] = [];
                 for (const [fieldKey, result] of validationResult) {

@@ -1,8 +1,8 @@
 import {createContext, useContext} from "react";
 
 export interface IEnvironmentContext {
-    api: {
-        baseUrl: string;
+    api?: {
+        baseUrl?: string;
     }
 }
 

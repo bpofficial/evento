@@ -36,7 +36,7 @@ export const createPageProps = <T>({ pageState, form }: CreatePageProps<T>) => {
     return props;
 };
 
-export const usePagesState = (inputs: Map<string, string>) => {
+export const usePagesState = (inputs: Map<string, string>, preview = false) => {
     const model = useModel();
     const [currentIndex, setCurrentIndex] = useState(0);
     const previousIndex = usePrevious(currentIndex);
@@ -66,6 +66,7 @@ export const usePagesState = (inputs: Map<string, string>) => {
             transition,
             currentIndex,
             setCurrentIndex,
+            preview
         });
 
     useEffect(() => {

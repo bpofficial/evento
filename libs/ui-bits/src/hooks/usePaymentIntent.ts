@@ -10,6 +10,7 @@ export const usePaymentIntent = () => {
 
     return useCallback(
         async (values: any, metadata?: Record<string, string>) => {
+            if (!environment?.api?.baseUrl) return null;
             const api = new EventoApi({
                 gatewayUrl: environment.api.baseUrl,
             });
@@ -26,6 +27,6 @@ export const usePaymentIntent = () => {
             }
             return result.right;
         },
-        [environment.api.baseUrl, formId, version]
+        [environment, formId, version]
     );
 };

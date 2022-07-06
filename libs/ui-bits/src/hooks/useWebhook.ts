@@ -4,7 +4,7 @@ import { sanitize } from 'string-sanitizer';
 import { HookEventTypes } from '@evento/models';
 import { EventoApi } from '@evento/api-client';
 
-export function useWebhook() {
+export function useWebhook(preview = false) {
     const model = useModel();
     const environment = useEnvironment();
 
@@ -28,7 +28,7 @@ export function useWebhook() {
         data: Record<string, string | number | boolean>
     ) => {
         const fields = convertFormValuesToFields(data);
-        if (!model.formId) return;
+        if (!model.formId || preview || !environment?.api?.baseUrl) return;
 
         const api = new EventoApi({
             gatewayUrl: environment.api.baseUrl,
