@@ -13,6 +13,8 @@
         "calculations": "libs/calculations",
         "models": "libs/models",
         "ui": "apps/ui",
+        "ui-admin": "apps/ui-admin",
+        "ui-admin-e2e": "apps/ui-admin-e2e",
         "ui-bits": "libs/ui-bits",
         "ui-e2e": "apps/ui-e2e",
         "ui-ssr": "apps/ui-ssr",

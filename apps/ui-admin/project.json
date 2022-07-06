@@ -1,0 +1,83 @@
+{
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/ui-admin/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/web:webpack",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "compiler": "babel",
+                "outputPath": "dist/apps/ui-admin",
+                "index": "apps/ui-admin/src/index.html",
+                "baseHref": "/",
+                "main": "apps/ui-admin/src/main.tsx",
+                "polyfills": "apps/ui-admin/src/polyfills.ts",
+                "tsConfig": "apps/ui-admin/tsconfig.app.json",
+                "assets": [
+                    "apps/ui-admin/src/favicon.ico",
+                    "apps/ui-admin/src/assets"
+                ],
+                "styles": [],
+                "scripts": [],
+                "webpackConfig": "@nrwl/react/plugins/webpack"
+            },
+            "configurations": {
+                "development": {
+                    "extractLicenses": false,
+                    "optimization": false,
+                    "sourceMap": true,
+                    "vendorChunk": true
+                },
+                "production": {
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/ui-admin/src/environments/environment.ts",
+                            "with": "apps/ui-admin/src/environments/environment.prod.ts"
+                        }
+                    ],
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "namedChunks": false,
+                    "extractLicenses": true,
+                    "vendorChunk": false
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nrwl/web:dev-server",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "ui-admin:build",
+                "hmr": true
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "ui-admin:build:development"
+                },
+                "production": {
+                    "buildTarget": "ui-admin:build:production",
+                    "hmr": false
+                }
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/ui-admin/**/*.{ts,tsx,js,jsx}"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/apps/ui-admin"],
+            "options": {
+                "jestConfig": "apps/ui-admin/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

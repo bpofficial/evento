@@ -34,6 +34,8 @@ export async function triggerHook(event: APIGatewayEvent) {
             $and: [{ types: { $in: events } }, { formId }],
         }).toArray();
 
+        console.debug(`Found ${hooks?.length} hooks for provided events.`)
+
         // TODO: Create signature from account hook secret
         const promises = hooks.map((hook) => {
             return axios.post(hook.url, {
@@ -46,6 +48,7 @@ export async function triggerHook(event: APIGatewayEvent) {
 
         return formatResponse()(204);
     } catch (error) {
+        console.log(error)
         return formatError('Internal Server Error', null, 500);
     }
 }
