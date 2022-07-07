@@ -1,6 +1,6 @@
 import {LegacyRef, useRef} from "react";
 import {useDrag, useDrop, XYCoord} from "react-dnd";
-import {CardProps} from "../Components/Card";
+import {CardProps} from "../components/Card";
 
 type OnMove = (dragIndex: number, hoverIndex: number) => void;
 
@@ -51,7 +51,7 @@ export function useDragToSort<T>(item: Item<T>, options: Options) {
             ) {
                 return;
             }
-
+            
             // Determine rectangle on screen
             const hoverBoundingRect = ref.current?.getBoundingClientRect();
 
@@ -87,7 +87,7 @@ export function useDragToSort<T>(item: Item<T>, options: Options) {
             // Generally it's better to avoid mutations,
             // but it's good here for the sake of performance
             // to avoid expensive index searches
-            dragItem.index = hoverIndex;
+            // dragItem.index = hoverIndex;
         },
     }));
 

@@ -4,11 +4,11 @@ import {EventoApp} from '@evento/ui-bits';
 import {useState} from 'react';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-import {Card} from "./Components/Card";
+import {Card} from "./components/Card"
 import {box, dims} from "./constants";
-import {ConfigurationBox} from "./Components/ConfigurationBox";
+import {ConfigurationBox} from "./components/ConfigurationBox";
 
-const defaultPage: any = { type: 'CustomContent', options: { content: [] } };
+const defaultPage: any = {type: 'CustomContent', options: {content: []}};
 
 export function App() {
     const [model] = useState(
@@ -31,7 +31,7 @@ export function App() {
                                     h="100%"
                                     overflowY={'scroll'}
                                 >
-                                    <Card title="Text" type="ContentText" />
+                                    <Card title="Text" type="ContentText"/>
                                     <Card
                                         title="Heading"
                                         type="ContentHeading"
@@ -44,12 +44,12 @@ export function App() {
                                         title="Form Input"
                                         type="ContentInput"
                                     />
-                                    <Card title="Select" type="ContentSelect" />
+                                    <Card title="Select" type="ContentSelect"/>
                                     <Card
                                         title="MultiSelect"
                                         type="ContentMultiSelect"
                                     />
-                                    <Card title="Poll" type="ContentPoll" />
+                                    <Card title="Poll" type="ContentPoll"/>
                                     <Card
                                         title="Poll Group"
                                         type="ContentPollGroup"
@@ -62,15 +62,15 @@ export function App() {
                                         title="Checkbox Group"
                                         type="ContentCheckboxGroup"
                                     />
-                                    <Card title="URL Link" type="ContentLink" />
+                                    <Card title="URL Link" type="ContentLink"/>
                                     <Card
                                         title="Payment Processing"
                                         type="ContentPayment"
                                     />
                                 </Box>
                             </VStack>
-                            <ConfigurationBox />
-                            <VStack {...dims} align="left">
+                            <ConfigurationBox/>
+                            <VStack {...dims} align="left" maxW={"400px"}>
                                 <Heading size="md">Preview</Heading>
                                 <Box {...box}>
                                     <EventoApp

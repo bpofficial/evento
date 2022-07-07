@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {Box, Heading, VStack,} from '@chakra-ui/react';
-import {useCallback, useState} from 'react';
+import {useState} from 'react';
 import update from 'immutability-helper';
 import {useDrop} from 'react-dnd';
 import {box, dims} from "../constants";
-import {Card, CardProps} from "./Card";
+import {Card, CardProps} from "../components/Card";
 
 // On Config-Card press, change Elements to Card Properties to allow easy editing
 
@@ -20,15 +20,19 @@ export const ConfigurationBox = () => {
         });
     };
 
-    const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+    /**
+     * @param dragIndex Index of the item being dragged
+     * @param hoverIndex Index of the item that the dragged item is hovering
+     */
+    const moveCard = (dragIndex: number, hoverIndex: number) => {
         setCards((prevCards) =>
             update(prevCards, {
                 $splice: [
                     [dragIndex, 1],
                     [hoverIndex, 0, prevCards[dragIndex]],
-                ],
+                ]
             }));
-    }, []);
+    };
 
     const [, dropRef] = useDrop(
         () => ({
@@ -41,35 +45,14 @@ export const ConfigurationBox = () => {
         [onDrop]
     );
 
-    const renderCard = useCallback(
-        (props: CardProps, index: number) => (
-            <Card
-                {...{
-                    index,
-                    key: props.id,
-                    ...props,
-                    moveCard,
-                    isSourceDrag: false,
-                }}
-            />
-        ),
-        []
-    );
+    console.log(cards)
 
     return (
         <VStack {...dims} align="left">
             <Heading size="md">Configuration</Heading>
             <Box {...box} p="2">
                 <Box {...dims} ref={dropRef}>
-                    {cards.map((c, i) => <Card
-                        {...{
-                            index: i,
-                            key: c.id,
-                            ...c,
-                            moveCard,
-                            isSourceDrag: false,
-                        }}
-                    />)}
+                    {cards.map((c, i) => <Card index={i} key={c.id} moveCard={moveCard} isSourceDrag={false} {...c} />)}
                 </Box>
             </Box>
         </VStack>

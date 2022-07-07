@@ -24,13 +24,11 @@ export interface CardProps {
 
 export const Card = ({moveCard, ...props}: CardProps) => {
     const {title, isSourceDrag = true} = props;
-    const { drag, drop, ref } = useDragToSort(props, {
+    const {drag, drop, ref} = useDragToSort(props, {
         type: () => isSourceDrag ? 'card' : 'config-card',
         dropAccept: ['config-card'],
         onMove: moveCard
     });
-
-    console.log(props, drag, drop)
 
     const opacity = drag.isDragging ? (isSourceDrag ? 0.8 : 0) : 1;
     return (
