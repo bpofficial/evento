@@ -24,7 +24,7 @@ export function useDragToSort<T>(item: Item<T>, options: Options) {
                 isDragging: monitor.isDragging(),
             }),
         }),
-        []
+        [item, options]
     );
 
     const [{handlerId}, drop] = useDrop<CardProps,
@@ -35,6 +35,9 @@ export function useDragToSort<T>(item: Item<T>, options: Options) {
             handlerId: monitor.getHandlerId(),
         }),
         hover: (dragItem, monitor) => {
+
+            console.log((item as any).title, item.index, ' : ', dragItem.title, dragItem.index);
+
             if (!ref.current) {
                 return;
             }
@@ -51,7 +54,7 @@ export function useDragToSort<T>(item: Item<T>, options: Options) {
             ) {
                 return;
             }
-            
+
             // Determine rectangle on screen
             const hoverBoundingRect = ref.current?.getBoundingClientRect();
 
@@ -87,9 +90,9 @@ export function useDragToSort<T>(item: Item<T>, options: Options) {
             // Generally it's better to avoid mutations,
             // but it's good here for the sake of performance
             // to avoid expensive index searches
-            // dragItem.index = hoverIndex;
+            dragItem.index = hoverIndex;
         },
-    }));
+    }), [item, options]);
 
 
     return {

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {Box, Heading, VStack,} from '@chakra-ui/react';
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import update from 'immutability-helper';
 import {useDrop} from 'react-dnd';
 import {box, dims} from "../constants";
@@ -24,7 +24,7 @@ export const ConfigurationBox = () => {
      * @param dragIndex Index of the item being dragged
      * @param hoverIndex Index of the item that the dragged item is hovering
      */
-    const moveCard = (dragIndex: number, hoverIndex: number) => {
+    const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
         setCards((prevCards) =>
             update(prevCards, {
                 $splice: [
@@ -32,7 +32,7 @@ export const ConfigurationBox = () => {
                     [hoverIndex, 0, prevCards[dragIndex]],
                 ]
             }));
-    };
+    }, []);
 
     const [, dropRef] = useDrop(
         () => ({
@@ -44,8 +44,6 @@ export const ConfigurationBox = () => {
         }),
         [onDrop]
     );
-
-    console.log(cards)
 
     return (
         <VStack {...dims} align="left">
