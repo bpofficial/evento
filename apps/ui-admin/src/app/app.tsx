@@ -1,7 +1,14 @@
-import { Box, ChakraProvider, Heading, HStack, VStack } from '@chakra-ui/react';
+import {
+    Box,
+    ChakraProvider,
+    Heading,
+    HStack,
+    useIds,
+    VStack,
+} from '@chakra-ui/react';
 import { FormModel } from '@evento/models';
 import { EventoApp } from '@evento/ui-bits';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import update from 'immutability-helper';
 import { DndProvider, useDrag, useDrop, XYCoord } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -37,6 +44,12 @@ const Card = ({ moveCard, ...props }: CardProps) => {
         }),
         []
     );
+
+    useEffect(() => {
+        if (!isSourceDrag) {
+            console.log(props);
+        }
+    }, []);
 
     const [{ handlerId }, drop] = useDrop<
         CardProps,
@@ -133,17 +146,20 @@ const ConfigurationBox = () => {
         setCards((prevCards) => prevCards.concat([drop]));
     };
 
-    const moveCard = (dragIndex: number, hoverIndex: number) => {
-        const dragItem = cards[dragIndex];
-        if (dragItem) {
-            setCards((prevCards) => {
-                const copy = [...prevCards];
-                const prevItem = copy.splice(hoverIndex, 1, dragItem);
-                copy.splice(dragIndex, 1, prevItem[0]);
-                return copy;
+    const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+        console.log('moveCard', dragIndex, hoverIndex);
+        setCards((prevCards) => {
+            console.log('  - prev cards', prevCards);
+            const result = update(prevCards, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, prevCards[dragIndex]],
+                ],
             });
-        }
-    };
+            console.log('  - new cards', result);
+            return result;
+        });
+    }, []);
 
     const [, dropRef] = useDrop(
         () => ({
@@ -160,11 +176,11 @@ const ConfigurationBox = () => {
         (props: CardProps, index: number) => (
             <Card
                 {...{
-                    ...props,
                     index,
-                    isSourceDrag: false,
-                    moveCard,
                     key: index,
+                    ...props,
+                    moveCard,
+                    isSourceDrag: false,
                 }}
             />
         ),
@@ -176,7 +192,7 @@ const ConfigurationBox = () => {
             <Heading size="md">Configuration</Heading>
             <Box {...box} p="2">
                 <Box {...dims} ref={dropRef}>
-                    {cards.map((props, key) => renderCard(props, key))}
+                    {cards.map((c, i) => renderCard(c, i))}
                 </Box>
             </Box>
         </VStack>
