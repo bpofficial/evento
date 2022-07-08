@@ -1,14 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {Box, Heading, VStack,} from '@chakra-ui/react';
-import {useCallback, useState} from 'react';
+import {MouseEvent, useCallback, useState} from 'react';
 import update from 'immutability-helper';
 import {useDrop} from 'react-dnd';
 import {box, dims} from "../constants";
-import {Card, CardProps} from "../components/Card";
+import {Card, CardProps} from "./Card";
 
 // On Config-Card press, change Elements to Card Properties to allow easy editing
 
-export const ConfigurationBox = () => {
+interface ConfigurationBoxProps {
+    currentSelectedCardIndex: number
+    cardOnClick: (item: CardProps) => void
+    onBackClick: () => void
+}
+
+export const ConfigurationBox = ({cardOnClick, currentSelectedCardIndex, onBackClick}: ConfigurationBoxProps) => {
     const [cards, setCards] = useState<CardProps[]>([]);
 
     const onDrop = (drop: CardProps) => {
@@ -19,6 +25,17 @@ export const ConfigurationBox = () => {
             }]);
         });
     };
+
+    const onDelete = (index: number) => (evt: MouseEvent<HTMLButtonElement>) => {
+        evt.stopPropagation();
+        if (index === currentSelectedCardIndex) {
+            onBackClick();
+        }
+        setCards((prevCards) =>
+            update(prevCards, {
+                $splice: [[index, 1]]
+            }));
+    }
 
     /**
      * @param dragIndex Index of the item being dragged
@@ -46,11 +63,18 @@ export const ConfigurationBox = () => {
     );
 
     return (
-        <VStack {...dims} align="left">
+        <VStack {...dims} align="left" userSelect={"none"}>
             <Heading size="md">Configuration</Heading>
             <Box {...box} p="2">
                 <Box {...dims} ref={dropRef}>
-                    {cards.map((c, i) => <Card index={i} key={c.id} moveCard={moveCard} isSourceDrag={false} {...c} />)}
+                    {cards.map((c, i) => <Card
+                        index={i}
+                        key={c.id}
+                        isSourceDrag={false} {...c}
+                        onMove={moveCard}
+                        onClick={cardOnClick}
+                        onDelete={onDelete}
+                    />)}
                 </Box>
             </Box>
         </VStack>
